@@ -1,0 +1,32 @@
+{
+  "name": "memory-cards",
+  "version": "1.0.0",
+  "description": "Flips through reminiscence cards with an emoji and a short phrase, edited by family, to prompt conversation.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tabisurushosai/memory-cards.git"
+  },
+  "keywords": [
+    "chrome-extension",
+    "reminiscence",
+    "offline"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tabisurushosai/memory-cards/issues"
+  },
+  "homepage": "https://github.com/tabisurushosai/memory-cards#readme",
+  "devDependencies": {
+    "@types/chrome": "^0.1.42",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.14"
+  }
+}
