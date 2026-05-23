@@ -1,13 +1,16 @@
+interface ChromeI18nGlobal {
+  i18n?: {
+    getUILanguage?: () => string;
+  };
+}
+
 export function getPreferredLanguage(): string {
   return getChromeLanguage() ?? getNavigatorLanguage() ?? "ja";
 }
 
 function getChromeLanguage(): string | undefined {
-  if (typeof chrome === "undefined" || !chrome.i18n?.getUILanguage) {
-    return undefined;
-  }
-
-  return chrome.i18n.getUILanguage();
+  const chromeGlobal = (globalThis as typeof globalThis & { chrome?: ChromeI18nGlobal }).chrome;
+  return chromeGlobal?.i18n?.getUILanguage?.();
 }
 
 function getNavigatorLanguage(): string | undefined {
