@@ -26,10 +26,28 @@ const app = appRoot;
 let state: AppState;
 
 async function boot(): Promise<void> {
+  renderLoading();
   state = normalizeAppState(await storage.load());
   document.documentElement.lang = getLocale();
   await storage.save(state);
   render();
+}
+
+function renderLoading(): void {
+  app.textContent = "";
+
+  const container = element("div", "shell shell-loading");
+  const panel = element("section", "panel state-panel");
+  panel.setAttribute("aria-busy", "true");
+
+  const title = element("h1");
+  title.textContent = t("appTitle");
+  const message = element("p", "state-message");
+  message.textContent = t("loading");
+
+  panel.append(title, message);
+  container.append(panel);
+  app.append(container);
 }
 
 function render(statusMessage = ""): void {
@@ -96,7 +114,10 @@ function renderCardStage(card: MemoryCard): HTMLElement {
 
 function renderEditor(): HTMLElement {
   const section = element("section", "panel editor");
+  section.setAttribute("aria-labelledby", "editor-title");
+
   const title = element("h2");
+  title.id = "editor-title";
   title.textContent = t("editorTitle");
   const help = element("p", "help-text");
   help.textContent = t("editorHelp");
@@ -172,7 +193,10 @@ function renderCardEditor(card: MemoryCard, index: number): HTMLElement {
 
 function renderPremiumPanel(): HTMLElement {
   const section = element("section", "panel premium");
+  section.setAttribute("aria-labelledby", "premium-title");
+
   const title = element("h2");
+  title.id = "premium-title";
   title.textContent = t("premiumTitle");
 
   const description = element("p", "help-text");
@@ -197,15 +221,19 @@ function renderPremiumPanel(): HTMLElement {
 
 function renderNotes(statusMessage: string): HTMLElement {
   const footer = element("footer", "notes");
-  const status = element("p", "status-message");
-  status.textContent = statusMessage;
+  if (statusMessage) {
+    const status = element("p", "status-message");
+    status.setAttribute("role", "status");
+    status.textContent = statusMessage;
+    footer.append(status);
+  }
 
   const privacy = element("p");
   privacy.textContent = t("privacyNote");
   const nonMedical = element("p");
   nonMedical.textContent = t("nonMedicalNote");
 
-  footer.append(status, privacy, nonMedical);
+  footer.append(privacy, nonMedical);
   return footer;
 }
 
