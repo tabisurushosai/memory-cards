@@ -1,4 +1,4 @@
-type Locale = "ja" | "en";
+export type Locale = "ja" | "en";
 
 const messages = {
   ja: {
@@ -60,25 +60,19 @@ const messages = {
 } as const;
 
 export type MessageKey = keyof typeof messages.ja;
+export type Translator = (key: MessageKey, replacements?: Record<string, string | number>) => string;
 
-export function getLocale(): Locale {
-  const language = getChromeLanguage() ?? navigator.language;
+export function getLocale(language = "ja"): Locale {
   return language.toLowerCase().startsWith("en") ? "en" : "ja";
 }
 
-export function t(key: MessageKey, replacements: Record<string, string | number> = {}): string {
-  const template = String(messages[getLocale()][key]);
+export function createTranslator(locale: Locale): Translator {
+  return (key, replacements = {}) => {
+    const template = String(messages[locale][key]);
 
-  return Object.entries(replacements).reduce(
-    (text, [name, value]) => text.replaceAll(`{${name}}`, String(value)),
-    template
-  );
-}
-
-function getChromeLanguage(): string | undefined {
-  if (typeof chrome === "undefined" || !chrome.i18n?.getUILanguage) {
-    return undefined;
-  }
-
-  return chrome.i18n.getUILanguage();
+    return Object.entries(replacements).reduce(
+      (text, [name, value]) => text.replaceAll(`{${name}}`, String(value)),
+      template
+    );
+  };
 }

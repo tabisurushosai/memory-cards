@@ -46,7 +46,8 @@ Premium は `$3` の買い切り想定です。現時点では `src/core/premium
 
 - 純ロジックは `src/core/` に配置し、`chrome.*` へ依存しません。
 - 保存処理は `src/storage/` のアダプタ越しに行います。
-- Chrome 実装は `chrome.storage.local` のみを使います。
+- Chrome の保存実装は `chrome.storage.local` のみを使います。
+- 言語取得などプラットフォーム固有処理は `src/platform/` に隔離します。
 
 ## Legal
 
