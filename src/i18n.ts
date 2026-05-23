@@ -4,6 +4,8 @@ const messages = {
   ja: {
     appTitle: "おもいでカード",
     appSubtitle: "絵文字と短い言葉をめくって、会話のきっかけにします。",
+    cardStageTitle: "カード表示",
+    cardKeyboardHint: "カード表示にフォーカス中は、左右の矢印キーでもカードをめくれます。",
     previous: "前へ",
     next: "次へ",
     cardCount: "{current} / {total}",
@@ -32,6 +34,8 @@ const messages = {
   en: {
     appTitle: "Memory Cards",
     appSubtitle: "Flip through emoji and short-phrase cards to prompt conversation.",
+    cardStageTitle: "Card display",
+    cardKeyboardHint: "When the card display is focused, use the left and right arrow keys to move between cards.",
     previous: "Previous",
     next: "Next",
     cardCount: "{current} / {total}",

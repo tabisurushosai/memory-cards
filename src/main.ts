@@ -27,6 +27,7 @@ if (!appRoot) {
 
 const app = appRoot;
 let state: AppState;
+type FocusTarget = "card-stage" | "previous-card" | "next-card";
 
 async function boot(): Promise<void> {
   renderLoading();
@@ -53,7 +54,7 @@ function renderLoading(): void {
   app.append(container);
 }
 
-function render(statusMessage = ""): void {
+function render(statusMessage = "", focusTarget?: FocusTarget): void {
   app.textContent = "";
 
   const currentCard = state.cards[state.currentIndex];
@@ -70,6 +71,7 @@ function render(statusMessage = ""): void {
   container.append(...content);
 
   app.append(container);
+  restoreFocus(focusTarget);
 }
 
 function renderHeader(): HTMLElement {
@@ -92,37 +94,80 @@ function renderStatusBanner(statusMessage: string): HTMLElement {
 
 function renderCardStage(card: MemoryCard): HTMLElement {
   const section = element("section", "card-stage");
-  section.setAttribute("aria-label", t("appTitle"));
+  section.id = "card-stage";
+  section.tabIndex = 0;
+  section.dataset.focusKey = "card-stage";
+  section.setAttribute("aria-labelledby", "card-stage-title");
+  section.setAttribute("aria-describedby", "card-keyboard-hint current-card-count");
+  section.addEventListener("keydown", handleCardStageKeydown);
 
-  const cardPanel = element("div", "memory-card");
+  const title = element("h2", "sr-only");
+  title.id = "card-stage-title";
+  title.textContent = t("cardStageTitle");
+
+  const cardPanel = element("article", "memory-card");
+  cardPanel.id = "current-card";
+  cardPanel.setAttribute("aria-labelledby", "current-card-phrase");
+  cardPanel.setAttribute("aria-describedby", "current-card-count");
   const emoji = element("div", "memory-emoji");
+  emoji.setAttribute("aria-hidden", "true");
   emoji.textContent = card.emoji;
   const phrase = element("p", "memory-phrase");
+  phrase.id = "current-card-phrase";
   phrase.textContent = card.phrase;
   cardPanel.append(emoji, phrase);
 
   const controls = element("div", "controls");
   const previous = button(t("previous"), "secondary");
+  previous.dataset.focusKey = "previous-card";
+  previous.setAttribute("aria-controls", "current-card");
   previous.addEventListener("click", () => {
     state.currentIndex = getPreviousIndex(state.currentIndex, state.cards.length);
-    void saveAndRender();
+    void saveAndRender("", "previous-card");
   });
 
   const count = element("span", "card-count");
+  count.id = "current-card-count";
+  count.setAttribute("aria-live", "polite");
+  count.setAttribute("aria-atomic", "true");
   count.textContent = t("cardCount", {
     current: state.currentIndex + 1,
     total: state.cards.length
   });
 
   const next = button(t("next"), "primary");
+  next.dataset.focusKey = "next-card";
+  next.setAttribute("aria-controls", "current-card");
   next.addEventListener("click", () => {
     state.currentIndex = getNextIndex(state.currentIndex, state.cards.length);
-    void saveAndRender();
+    void saveAndRender("", "next-card");
   });
 
+  const keyboardHint = element("p", "keyboard-hint");
+  keyboardHint.id = "card-keyboard-hint";
+  keyboardHint.textContent = t("cardKeyboardHint");
+
   controls.append(previous, count, next);
-  section.append(cardPanel, controls);
+  section.append(title, cardPanel, controls, keyboardHint);
   return section;
+}
+
+function handleCardStageKeydown(event: KeyboardEvent): void {
+  if (event.target !== event.currentTarget || event.altKey || event.ctrlKey || event.metaKey) {
+    return;
+  }
+
+  if (event.key === "ArrowLeft") {
+    event.preventDefault();
+    state.currentIndex = getPreviousIndex(state.currentIndex, state.cards.length);
+    void saveAndRender("", "card-stage");
+  }
+
+  if (event.key === "ArrowRight") {
+    event.preventDefault();
+    state.currentIndex = getNextIndex(state.currentIndex, state.cards.length);
+    void saveAndRender("", "card-stage");
+  }
 }
 
 function renderEditor(): HTMLElement {
@@ -168,6 +213,9 @@ function renderCardEditor(card: MemoryCard, index: number): HTMLElement {
   const save = button(t("saveCard"), "primary", "submit");
   const remove = button(t("deleteCard"), "danger", "button");
   remove.disabled = state.cards.length <= 1;
+  if (remove.disabled) {
+    remove.setAttribute("aria-label", `${t("deleteCard")} (${t("cannotDeleteLast")})`);
+  }
 
   row.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -243,9 +291,18 @@ function renderNotes(): HTMLElement {
   return footer;
 }
 
-async function saveAndRender(statusMessage = ""): Promise<void> {
+async function saveAndRender(statusMessage = "", focusTarget?: FocusTarget): Promise<void> {
   await storage.save(state);
-  render(statusMessage);
+  render(statusMessage, focusTarget);
+}
+
+function restoreFocus(focusTarget?: FocusTarget): void {
+  if (!focusTarget) {
+    return;
+  }
+
+  const target = app.querySelector<HTMLElement>(`[data-focus-key="${focusTarget}"]`);
+  target?.focus({ preventScroll: true });
 }
 
 function labeledField(labelText: string, control: HTMLInputElement): HTMLElement {
