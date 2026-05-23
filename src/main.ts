@@ -10,9 +10,10 @@ import { AppState, normalizeAppState } from "./core/appState";
 import {
   PREMIUM_PRICE_LABEL,
   STRIPE_PAYMENT_LINK,
+  TRIAL_DAYS,
   calculatePremiumStatus
 } from "./core/premium";
-import { createTranslator, getLocale } from "./i18n";
+import { createTranslator, formatDate, formatNumber, formatRemainingDays, getLocale } from "./i18n";
 import { getPreferredLanguage } from "./platform/language";
 import { createAppStorage } from "./storage";
 
@@ -30,9 +31,10 @@ let state: AppState;
 type FocusTarget = "card-stage" | "previous-card" | "next-card";
 
 async function boot(): Promise<void> {
+  document.documentElement.lang = locale;
+  document.title = t("appTitle");
   renderLoading();
   state = normalizeAppState(await storage.load());
-  document.documentElement.lang = locale;
   await storage.save(state);
   render();
 }
@@ -204,11 +206,12 @@ function renderEditor(): HTMLElement {
 
 function renderCardEditor(card: MemoryCard, index: number): HTMLElement {
   const row = element("form", "editor-row");
-  row.setAttribute("aria-label", `${t("editorTitle")} ${index + 1}`);
+  const displayIndex = formatNumber(locale, index + 1);
+  row.setAttribute("aria-label", `${t("editorTitle")} ${displayIndex}`);
 
-  const emojiInput = input(`${t("emojiLabel")} ${index + 1}`, card.emoji, 4);
+  const emojiInput = input(`${t("emojiLabel")} ${displayIndex}`, card.emoji, 4);
   emojiInput.classList.add("emoji-input");
-  const phraseInput = input(`${t("phraseLabel")} ${index + 1}`, card.phrase, 48);
+  const phraseInput = input(`${t("phraseLabel")} ${displayIndex}`, card.phrase, 48);
 
   const save = button(t("saveCard"), "primary", "submit");
   const remove = button(t("deleteCard"), "danger", "button");
@@ -261,14 +264,20 @@ function renderPremiumPanel(): HTMLElement {
   title.textContent = t("premiumTitle");
 
   const description = element("p", "help-text");
-  description.textContent = t("premiumDescription").replace("$3", PREMIUM_PRICE_LABEL);
+  description.textContent = t("premiumDescription", {
+    price: PREMIUM_PRICE_LABEL,
+    trialDays: TRIAL_DAYS
+  });
 
   const status = calculatePremiumStatus(state.firstStartedAt, state.premiumPurchased);
   const statusLine = element("p", "premium-status");
   if (state.premiumPurchased) {
     statusLine.textContent = t("premiumPurchased");
   } else if (status.isTrialActive) {
-    statusLine.textContent = t("premiumActiveTrial", { days: status.trialDaysRemaining });
+    statusLine.textContent = t("premiumActiveTrial", {
+      days: formatRemainingDays(locale, status.trialDaysRemaining),
+      endsAt: formatDate(locale, status.trialEndsAt)
+    });
   } else {
     statusLine.textContent = t("premiumExpired");
   }
