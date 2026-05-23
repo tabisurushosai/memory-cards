@@ -1,10 +1,10 @@
-import { AppState } from "../core/appState";
-import { AppStorage } from "./AppStorage";
+import type { AppState } from "../core/appState";
+import { type AppStorage, type StoredAppState } from "./AppStorage";
 
 export class MemoryAppStorage implements AppStorage {
-  private state: Partial<AppState> | undefined;
+  private state: StoredAppState | undefined;
 
-  async load(): Promise<Partial<AppState> | undefined> {
+  async load(): Promise<StoredAppState | undefined> {
     return this.state;
   }
 

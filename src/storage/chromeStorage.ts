@@ -1,15 +1,20 @@
-import { AppState } from "../core/appState";
-import { AppStorage } from "./AppStorage";
-
-const STORAGE_KEY = "memoryCardsState";
+import type { AppState } from "../core/appState";
+import {
+  APP_STORAGE_KEY,
+  type AppStorage,
+  type KeyValueStorageArea,
+  type StoredAppState
+} from "./AppStorage";
 
 export class ChromeAppStorage implements AppStorage {
-  async load(): Promise<Partial<AppState> | undefined> {
-    const result = await chrome.storage.local.get(STORAGE_KEY);
-    return result[STORAGE_KEY] as Partial<AppState> | undefined;
+  constructor(private readonly storageArea: KeyValueStorageArea) {}
+
+  async load(): Promise<StoredAppState | undefined> {
+    const result = await this.storageArea.get(APP_STORAGE_KEY);
+    return result[APP_STORAGE_KEY] as StoredAppState | undefined;
   }
 
   async save(state: AppState): Promise<void> {
-    await chrome.storage.local.set({ [STORAGE_KEY]: state });
+    await this.storageArea.set({ [APP_STORAGE_KEY]: state });
   }
 }
