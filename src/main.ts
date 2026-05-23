@@ -58,14 +58,16 @@ function render(statusMessage = ""): void {
 
   const currentCard = state.cards[state.currentIndex];
   const container = element("div", "shell");
-
-  container.append(
+  const content = [
     renderHeader(),
+    ...(statusMessage ? [renderStatusBanner(statusMessage)] : []),
     renderCardStage(currentCard),
     renderEditor(),
     renderPremiumPanel(),
-    renderNotes(statusMessage)
-  );
+    renderNotes()
+  ];
+
+  container.append(...content);
 
   app.append(container);
 }
@@ -78,6 +80,14 @@ function renderHeader(): HTMLElement {
   subtitle.textContent = t("appSubtitle");
   header.append(title, subtitle);
   return header;
+}
+
+function renderStatusBanner(statusMessage: string): HTMLElement {
+  const banner = element("aside", "status-banner");
+  banner.setAttribute("role", "status");
+  banner.setAttribute("aria-live", "polite");
+  banner.textContent = statusMessage;
+  return banner;
 }
 
 function renderCardStage(card: MemoryCard): HTMLElement {
@@ -222,15 +232,8 @@ function renderPremiumPanel(): HTMLElement {
   return section;
 }
 
-function renderNotes(statusMessage: string): HTMLElement {
+function renderNotes(): HTMLElement {
   const footer = element("footer", "notes");
-  if (statusMessage) {
-    const status = element("p", "status-message");
-    status.setAttribute("role", "status");
-    status.textContent = statusMessage;
-    footer.append(status);
-  }
-
   const privacy = element("p");
   privacy.textContent = t("privacyNote");
   const nonMedical = element("p");

@@ -4,8 +4,10 @@
   --color-surface-strong: #ffffff;
   --color-text: #111827;
   --color-muted: #4b5563;
+  --color-muted-bg: #ece4d6;
   --color-border: #1f2937;
   --color-card: #102033;
+  --color-card-soft: #17314d;
   --color-accent: #f6c453;
   --color-accent-soft: #d8ecff;
   --color-danger: #f7b4b0;
@@ -38,6 +40,8 @@ body {
   margin: 0;
   background: var(--color-bg);
   color: var(--color-text);
+  line-height: 1.45;
+  text-rendering: optimizeLegibility;
 }
 
 button,
@@ -47,8 +51,8 @@ input {
 
 .shell {
   display: grid;
-  gap: 16px;
-  padding: clamp(16px, 4vw, 24px);
+  gap: 18px;
+  padding: clamp(18px, 5vw, 26px);
 }
 
 .shell-loading {
@@ -58,7 +62,8 @@ input {
 
 .header {
   display: grid;
-  gap: 8px;
+  gap: 10px;
+  padding-inline: 2px;
 }
 
 h1,
@@ -74,8 +79,9 @@ h1 {
 }
 
 h2 {
-  font-size: 1.25rem;
+  font-size: 1.28rem;
   line-height: 1.25;
+  letter-spacing: -0.01em;
 }
 
 .subtitle,
@@ -102,18 +108,19 @@ h2 {
 
 .card-stage {
   display: grid;
-  gap: 18px;
-  padding: clamp(16px, 4vw, 20px);
+  gap: 20px;
+  padding: clamp(18px, 4.5vw, 22px);
 }
 
 .memory-card {
   display: grid;
   min-height: clamp(190px, 54vw, 230px);
   align-content: center;
-  gap: 16px;
+  gap: 18px;
   border-radius: 18px;
-  padding: 24px 18px;
-  background: var(--color-card);
+  padding: 28px 20px;
+  background:
+    linear-gradient(180deg, var(--color-card-soft), var(--color-card));
   color: #ffffff;
   text-align: center;
 }
@@ -127,7 +134,7 @@ h2 {
   max-width: 12em;
   margin: 0 auto;
   font-size: clamp(1.45rem, 7vw, 1.8rem);
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1.3;
 }
 
@@ -142,7 +149,7 @@ h2 {
   min-width: 70px;
   border-radius: 999px;
   padding: 8px 10px;
-  background: rgba(31, 41, 55, 0.08);
+  background: var(--color-muted-bg);
   font-size: 1rem;
   font-weight: 700;
   text-align: center;
@@ -150,8 +157,8 @@ h2 {
 
 .panel {
   display: grid;
-  gap: 14px;
-  padding: clamp(16px, 4vw, 20px);
+  gap: 16px;
+  padding: clamp(18px, 4.5vw, 22px);
 }
 
 .editor-list {
@@ -162,9 +169,9 @@ h2 {
 .editor-row {
   display: grid;
   grid-template-columns: minmax(84px, 0.42fr) minmax(0, 1fr);
-  gap: 10px;
-  border-top: 1px solid #d7cbb8;
-  padding-top: 14px;
+  gap: 12px;
+  border-top: 2px solid #d7cbb8;
+  padding-top: 16px;
 }
 
 .field {
@@ -183,7 +190,7 @@ input {
   min-height: 50px;
   border: 2px solid var(--color-border);
   border-radius: 12px;
-  padding: 9px 11px;
+  padding: 10px 12px;
   background: var(--color-surface-strong);
   color: var(--color-text);
   font: inherit;
@@ -191,6 +198,7 @@ input {
 
 .emoji-input {
   text-align: center;
+  font-size: 1.2rem;
 }
 
 .button {
@@ -204,6 +212,10 @@ input {
   font-weight: 800;
   line-height: 1.15;
   box-shadow: 0 3px 0 var(--color-border);
+}
+
+.button:hover:not(:disabled) {
+  filter: brightness(1.03);
 }
 
 .button:focus,
@@ -254,23 +266,26 @@ input:focus {
 
 .notes {
   display: grid;
-  gap: 8px;
-  padding: 14px;
+  gap: 10px;
+  padding: 16px;
   background: var(--color-surface-strong);
   font-size: 0.95rem;
 }
 
-.status-message {
+.status-banner {
   border: 2px solid rgba(15, 107, 56, 0.25);
-  border-radius: 12px;
-  padding: 9px 11px;
+  border-radius: 16px;
+  padding: 11px 14px;
   background: var(--color-success-bg);
   color: var(--color-success);
   font-weight: 800;
+  line-height: 1.35;
+  box-shadow: 0 3px 0 rgba(15, 107, 56, 0.2);
 }
 
 .state-panel {
   gap: 12px;
+  padding-block: 28px;
   text-align: center;
 }
 
