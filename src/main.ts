@@ -12,10 +12,13 @@ import {
   STRIPE_PAYMENT_LINK,
   calculatePremiumStatus
 } from "./core/premium";
+import { createTranslator, getLocale } from "./i18n";
+import { getPreferredLanguage } from "./platform/language";
 import { createAppStorage } from "./storage";
-import { getLocale, t } from "./i18n";
 
 const storage = createAppStorage();
+const locale = getLocale(getPreferredLanguage());
+const t = createTranslator(locale);
 const appRoot = document.querySelector<HTMLElement>("#app");
 
 if (!appRoot) {
@@ -28,7 +31,7 @@ let state: AppState;
 async function boot(): Promise<void> {
   renderLoading();
   state = normalizeAppState(await storage.load());
-  document.documentElement.lang = getLocale();
+  document.documentElement.lang = locale;
   await storage.save(state);
   render();
 }
