@@ -65,7 +65,7 @@ export function getLocale(): Locale {
 }
 
 export function t(key: MessageKey, replacements: Record<string, string | number> = {}): string {
-  const template = messages[getLocale()][key];
+  const template = String(messages[getLocale()][key]);
 
   return Object.entries(replacements).reduce(
     (text, [name, value]) => text.replaceAll(`{${name}}`, String(value)),

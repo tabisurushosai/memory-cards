@@ -16,12 +16,13 @@ import { createAppStorage } from "./storage";
 import { getLocale, t } from "./i18n";
 
 const storage = createAppStorage();
-const app = document.querySelector<HTMLElement>("#app");
+const appRoot = document.querySelector<HTMLElement>("#app");
 
-if (!app) {
+if (!appRoot) {
   throw new Error("App root was not found.");
 }
 
+const app = appRoot;
 let state: AppState;
 
 async function boot(): Promise<void> {
