@@ -51,11 +51,16 @@ function renderLoading(): void {
 
   const container = element("div", "shell shell-loading");
   const panel = element("section", "panel state-panel");
+  panel.setAttribute("role", "status");
   panel.setAttribute("aria-busy", "true");
+  panel.setAttribute("aria-live", "polite");
+  panel.setAttribute("aria-atomic", "true");
+  panel.setAttribute("aria-describedby", "loading-message");
 
   const title = element("h1");
   title.textContent = t("appTitle");
   const message = element("p", "state-message");
+  message.id = "loading-message";
   message.textContent = t("loading");
 
   panel.append(title, message);
@@ -113,6 +118,7 @@ function renderStatusBanner(statusMessage: string): HTMLElement {
   const banner = element("aside", "status-banner");
   banner.setAttribute("role", "status");
   banner.setAttribute("aria-live", "polite");
+  banner.setAttribute("aria-atomic", "true");
   banner.textContent = statusMessage;
   return banner;
 }
