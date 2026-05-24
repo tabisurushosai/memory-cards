@@ -1,4 +1,4 @@
-import type { StorageAdapter } from "./AppStorage";
+import type { StorageAdapter } from "./StorageAdapter";
 
 export interface ChromeStorageArea {
   get(key: string): Promise<Record<string, unknown>>;

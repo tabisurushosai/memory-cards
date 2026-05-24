@@ -1,4 +1,4 @@
-import type { StorageAdapter } from "./AppStorage";
+import type { StorageAdapter } from "./StorageAdapter";
 
 export class MemoryStorageAdapter implements StorageAdapter {
   private readonly values = new Map<string, unknown>();
