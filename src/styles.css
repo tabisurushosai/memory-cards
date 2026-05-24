@@ -302,10 +302,10 @@ h2 {
 
 input {
   width: 100%;
-  min-height: 56px;
+  min-height: 60px;
   border: 2px solid var(--color-border);
   border-radius: 12px;
-  padding: 11px 12px;
+  padding: 12px 14px;
   background: var(--color-surface-strong);
   color: var(--color-text);
   font: inherit;
@@ -320,12 +320,16 @@ input:hover:not(:disabled) {
   font-size: 1.2rem;
 }
 
+.field:focus-within span {
+  color: var(--color-text);
+}
+
 .button {
-  min-width: 44px;
-  min-height: 56px;
+  min-width: 48px;
+  min-height: 60px;
   border: 2px solid var(--color-border);
   border-radius: 14px;
-  padding: 12px 17px;
+  padding: 14px 18px;
   color: var(--color-text);
   cursor: pointer;
   font: inherit;
@@ -353,7 +357,7 @@ input:focus,
 input:focus-visible,
 .card-stage:focus-visible {
   outline: 4px solid var(--color-focus);
-  outline-offset: 3px;
+  outline-offset: 4px;
   box-shadow:
     0 0 0 6px var(--color-surface-strong),
     0 3px 0 var(--color-border);

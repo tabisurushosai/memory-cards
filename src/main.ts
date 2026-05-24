@@ -194,6 +194,9 @@ function renderCardStage(card: MemoryCard): HTMLElement {
   cardPanel.append(emoji, phrase);
 
   const controls = element("div", "controls");
+  controls.setAttribute("role", "group");
+  controls.setAttribute("aria-label", t("cardNavigationAriaLabel"));
+
   const previous = button(t("previous"), "secondary");
   previous.dataset["focusKey"] = "previous-card";
   previous.setAttribute("aria-label", t("previousCardAriaLabel"));
@@ -300,7 +303,10 @@ function renderCardEditor(card: MemoryCard, index: number): HTMLElement {
 
   const emojiInput = input(`card-${index}-emoji`, card.emoji, 4);
   emojiInput.classList.add("emoji-input");
+  emojiInput.setAttribute("aria-label", t("emojiInputAriaLabel", { index: displayIndex }));
+
   const phraseInput = input(`card-${index}-phrase`, card.phrase, 48);
+  phraseInput.setAttribute("aria-label", t("phraseInputAriaLabel", { index: displayIndex }));
 
   const save = button(t("saveCard"), "primary", "submit");
   save.dataset["focusKey"] = saveCardFocusKey(index);
@@ -309,6 +315,7 @@ function renderCardEditor(card: MemoryCard, index: number): HTMLElement {
   remove.setAttribute("aria-label", t("deleteCardAriaLabel", { index: displayIndex }));
   remove.disabled = state.cards.length <= 1;
   if (remove.disabled) {
+    remove.setAttribute("aria-disabled", "true");
     remove.setAttribute("aria-label", t("deleteCardDisabledAriaLabel", { index: displayIndex }));
   }
 
