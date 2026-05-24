@@ -117,17 +117,21 @@ function renderHeader(): HTMLElement {
 function renderFirstRunGuide(): HTMLElement {
   const guide = element("aside", "onboarding-guide");
   guide.setAttribute("aria-labelledby", "onboarding-title");
-  guide.setAttribute("aria-describedby", "onboarding-message");
+  guide.setAttribute("aria-describedby", "onboarding-lead onboarding-message");
 
   const title = element("h2", "guide-title");
   title.id = "onboarding-title";
   title.textContent = t("onboardingTitle");
 
-  const message = element("p");
+  const lead = element("p", "guide-lead");
+  lead.id = "onboarding-lead";
+  lead.textContent = t("onboardingLead");
+
+  const message = element("p", "guide-copy");
   message.id = "onboarding-message";
   message.textContent = t("onboardingGuide");
 
-  guide.append(title, message);
+  guide.append(title, lead, message);
   return guide;
 }
 
@@ -144,11 +148,18 @@ function renderEmptyCardsPanel(): HTMLElement {
   const section = element("section", "card-stage empty-cards");
   section.id = "card-stage";
   section.setAttribute("aria-labelledby", "empty-cards-title");
-  section.setAttribute("aria-describedby", "empty-cards-message empty-cards-next-step");
+  section.setAttribute(
+    "aria-describedby",
+    "empty-cards-lead empty-cards-message empty-cards-next-step"
+  );
 
   const title = element("h2", "state-title");
   title.id = "empty-cards-title";
   title.textContent = t("emptyCardsTitle");
+
+  const lead = element("p", "empty-cards-lead state-copy");
+  lead.id = "empty-cards-lead";
+  lead.textContent = t("emptyCardsLead");
 
   const message = element("p", "help-text state-copy");
   message.id = "empty-cards-message";
@@ -161,7 +172,7 @@ function renderEmptyCardsPanel(): HTMLElement {
   const add = button(t("emptyCardsAction"), "primary wide");
   add.addEventListener("click", handleAddCard);
 
-  section.append(title, message, nextStep, add);
+  section.append(title, lead, message, nextStep, add);
   return section;
 }
 
