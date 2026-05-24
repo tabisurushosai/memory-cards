@@ -1,17 +1,22 @@
 export type Locale = "ja" | "en";
 
+type LocalizedCardDraft = {
+  readonly emoji: string;
+  readonly phrase: string;
+};
+
 const messages = {
   ja: {
     appTitle: "おもいでカード",
-    appSubtitle: "絵文字と短い言葉のカードをめくって、会話のきっかけを作ります。",
+    appSubtitle: "絵文字と短い言葉のカードをめくり、会話のきっかけを作ります。",
     onboardingTitle: "はじめての方へ",
     onboardingGuide:
-      "まずは表示中のカードを一緒に読み、必要なら下の編集欄で家族の思い出に近い言葉へ直して保存してください。",
+      "まずは表示中のカードを一緒に読み、必要に応じて下の編集欄で家族の思い出に合う言葉へ直して保存してください。",
     cardStageTitle: "カード表示",
-    cardKeyboardHint: "カード表示にフォーカスしているときは、左右の矢印キーでも前後のカードへ移動できます。",
+    cardKeyboardHint: "カード表示にフォーカスがあるときは、左右の矢印キーでも前後のカードへ移動できます。",
     emptyCardsTitle: "最初のカードを作りましょう",
     emptyCardsMessage:
-      "カードがない間も、下のボタンからすぐに1枚目を用意できます。絵文字1つと短い言葉だけで大丈夫です。",
+      "カードがない場合も、下のボタンからすぐに1枚目を用意できます。絵文字1つと短い言葉だけで大丈夫です。",
     emptyCardsNextStep: "追加すると、この場所に大きなカードとして表示されます。",
     emptyCardsAction: "最初のカードを追加",
     previous: "前へ",
@@ -33,13 +38,14 @@ const messages = {
     addCard: "カードを追加",
     addEmojiDefault: "📷",
     addPhraseDefault: "写真を見た日のこと",
+    emptyPhraseFallback: "思い出のこと",
     loading: "カードを読み込んでいます...",
     saved: "保存しました。",
     cannotDeleteLast: "カードは1枚以上残してください。",
     premiumTitle: "Premium",
     premiumDescription:
-      "Premium は {price} の買い切りで提供予定です。現在は、この端末内で{trialDays}日間のトライアルを管理します。",
-    premiumActiveTrial: "トライアル中：残り{days}（{endsAt}まで）",
+      "Premiumは{price}の買い切りで提供予定です。現在は、この端末内で{trialDays}日間のトライアルを管理します。",
+    premiumActiveTrial: "トライアル中：{endsAt}まで、残り{days}",
     premiumExpired: "トライアルは終了しました。基本機能は引き続き使えます。",
     premiumPurchased: "Premium が有効です。",
     paymentPlaceholder: "支払いリンクは公開前に差し替えます。",
@@ -51,12 +57,12 @@ const messages = {
     appSubtitle: "Flip cards with an emoji and a short phrase to start a conversation.",
     onboardingTitle: "First time here?",
     onboardingGuide:
-      "Start by reading the card together, then use the editor below to save a phrase that fits your family memory.",
+      "Start by reading the card together, then use the editor below to save a phrase that fits your family's memories.",
     cardStageTitle: "Card display",
     cardKeyboardHint: "When the card display is focused, use the Left and Right Arrow keys to move to the previous or next card.",
     emptyCardsTitle: "Create your first card",
     emptyCardsMessage:
-      "If there are no cards, the button below can prepare the first one right away. One emoji and a short phrase are enough.",
+      "When there are no cards, use the button below to add the first one right away. One emoji and a short phrase are enough.",
     emptyCardsNextStep: "After you add it, the card appears here in large type.",
     emptyCardsAction: "Add the first card",
     previous: "Previous",
@@ -78,13 +84,14 @@ const messages = {
     addCard: "Add card",
     addEmojiDefault: "📷",
     addPhraseDefault: "The day we looked at photos",
+    emptyPhraseFallback: "A memory to share",
     loading: "Loading cards...",
     saved: "Saved.",
-    cannotDeleteLast: "Keep at least one card.",
+    cannotDeleteLast: "At least one card must remain.",
     premiumTitle: "Premium",
     premiumDescription:
-      "Premium is planned as a one-time {price} purchase. For now, this device tracks a {trialDays}-day trial locally.",
-    premiumActiveTrial: "Trial active: {days} left (until {endsAt})",
+      "Premium is planned as a one-time {price} purchase. For now, the {trialDays}-day trial is tracked locally on this device.",
+    premiumActiveTrial: "Trial active: {days} remaining, ending {endsAt}",
     premiumExpired: "The trial has ended. Basic features continue to work.",
     premiumPurchased: "Premium is active.",
     paymentPlaceholder: "The payment link will be added before publishing.",
@@ -92,6 +99,19 @@ const messages = {
     nonMedicalNote: "This extension is for conversation prompts only. It does not provide diagnosis, treatment, or medical advice."
   }
 } as const;
+
+const defaultCardDrafts: Record<Locale, readonly LocalizedCardDraft[]> = {
+  ja: [
+    { emoji: "🌸", phrase: "春に見た花のこと" },
+    { emoji: "🍙", phrase: "好きだったお弁当" },
+    { emoji: "🚃", phrase: "よく出かけた場所" }
+  ],
+  en: [
+    { emoji: "🌸", phrase: "Flowers we saw in spring" },
+    { emoji: "🍙", phrase: "A favorite packed lunch" },
+    { emoji: "🚃", phrase: "A place we often visited" }
+  ]
+};
 
 export type MessageKey = keyof typeof messages.ja;
 export type Translator = (key: MessageKey, replacements?: Record<string, string | number>) => string;
@@ -115,6 +135,10 @@ export function createTranslator(locale: Locale): Translator {
       template
     );
   };
+}
+
+export function getDefaultCardDrafts(locale: Locale): readonly LocalizedCardDraft[] {
+  return defaultCardDrafts[locale];
 }
 
 export function formatNumber(locale: Locale, value: number): string {
@@ -145,5 +169,5 @@ export function formatRemainingDays(locale: Locale, days: number): string {
     return `${formattedDays}日`;
   }
 
-  return `${formattedDays} ${days === 1 ? "day" : "days"}`;
+  return `${formattedDays} ${new Intl.PluralRules(localeTags[locale]).select(days) === "one" ? "day" : "days"}`;
 }
