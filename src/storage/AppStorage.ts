@@ -12,6 +12,10 @@ export interface AppStorage {
   save(state: Readonly<AppState>): Promise<void>;
 }
 
+export function createAppStorageFromAdapter(adapter: StorageAdapter): AppStorage {
+  return new AdapterAppStorage(adapter);
+}
+
 export class AdapterAppStorage implements AppStorage {
   constructor(private readonly adapter: StorageAdapter) {}
 

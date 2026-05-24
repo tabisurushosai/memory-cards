@@ -5,7 +5,7 @@ This app is written so the same card logic can be reused by Chrome, iOS, Android
 ## Boundaries
 
 - `src/core/` is pure application logic. Keep it free of `chrome.*`, browser extension APIs, network calls, DOM access, and platform storage details.
-- `src/storage/` owns persistence adapters. UI code should use only the `AppStorage` interface from this directory.
+- `src/storage/` owns persistence adapters. Platform-neutral code should import contracts from `src/storage/index.ts`; Chrome-only wiring lives in `src/storage/chromeAppStorage.ts`.
 - `src/platform/` owns small platform probes such as language detection.
 - UI code should stay close to standard DOM and local state so a native shell can replace the rendering layer without changing `src/core/`.
 
@@ -17,6 +17,7 @@ The storage interfaces are intentionally split:
 
 - `AppStorage` loads and saves the whole app state for UI code.
 - `StorageAdapter` is the small key/value persistence boundary for Chrome, iOS, Android, or test adapters.
+- `createAppStorageFromAdapter()` wraps any `StorageAdapter` with the shared app-state key, so platform adapters do not duplicate key handling.
 
 When adding a platform:
 
@@ -26,12 +27,13 @@ When adding a platform:
 4. Pass loaded data through `normalizeAppState()` before use.
 5. Keep saves local-only unless the product requirement explicitly changes.
 
-For Chrome, `ChromeStorageAdapter` wraps the minimal `chrome.storage.local` `get`/`set` surface and `AdapterAppStorage` applies the shared app-state key. Native iOS or Android shells should provide an equivalent `StorageAdapter` backed by their local persistence APIs.
+For Chrome, `ChromeStorageAdapter` wraps the minimal `chrome.storage.local` `get`/`set` surface, and `createChromeExtensionAppStorage()` is the only storage factory that probes `globalThis.chrome`. Native iOS or Android shells should avoid importing `src/storage/chromeAppStorage.ts`; instead, provide an equivalent `StorageAdapter` backed by local persistence APIs and pass it to `createAppStorageFromAdapter()`.
 
 ## Native shell checklist
 
 - Treat `src/core/` as a one-way dependency: UI, storage, and platform shells may import it, but `src/core/` must not import `src/storage/`, `src/platform/`, DOM APIs, `chrome.*`, or native SDK APIs.
 - Put iOS/Android persistence bridges behind `StorageAdapter` and keep them in `src/storage/` or the native shell layer.
+- Import only `src/storage/index.ts` or `src/storage/StorageAdapter.ts` from native code unless the target is the Chrome extension.
 - Keep UI decisions platform-neutral where practical: call pure functions from `src/core/`, then render with the current platform's view layer.
 - If a native target needs platform probes such as locale detection, add them outside `src/core/` and pass the result in.
 
