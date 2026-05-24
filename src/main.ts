@@ -22,9 +22,9 @@ import {
   getLocale
 } from "./i18n";
 import { getPreferredLanguage } from "./platform/language";
-import { createAppStorage } from "./storage";
+import { createChromeExtensionAppStorage } from "./storage/chromeAppStorage";
 
-const storage = createAppStorage();
+const storage = createChromeExtensionAppStorage();
 const locale = getLocale(getPreferredLanguage());
 const t = createTranslator(locale);
 const appRoot = document.querySelector<HTMLElement>("#app");
