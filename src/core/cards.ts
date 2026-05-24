@@ -10,11 +10,13 @@ export interface DraftMemoryCard {
   readonly phrase: string;
 }
 
-export const DEFAULT_CARDS: MemoryCard[] = [
-  createMemoryCard({ emoji: "🌸", phrase: "春に見た花のこと" }),
-  createMemoryCard({ emoji: "🍙", phrase: "好きだったお弁当" }),
-  createMemoryCard({ emoji: "🚃", phrase: "よく出かけた場所" })
-];
+export const DEFAULT_CARD_DRAFTS = [
+  { emoji: "🌸", phrase: "春に見た花のこと" },
+  { emoji: "🍙", phrase: "好きだったお弁当" },
+  { emoji: "🚃", phrase: "よく出かけた場所" }
+] as const satisfies readonly DraftMemoryCard[];
+
+export const DEFAULT_CARDS: MemoryCard[] = DEFAULT_CARD_DRAFTS.map((draft) => createMemoryCard(draft));
 
 export function createMemoryCard(
   draft: DraftMemoryCard,

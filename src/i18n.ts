@@ -1,9 +1,6 @@
-export type Locale = "ja" | "en";
+import { DEFAULT_CARD_DRAFTS, type DraftMemoryCard } from "./core/cards";
 
-type LocalizedCardDraft = {
-  readonly emoji: string;
-  readonly phrase: string;
-};
+export type Locale = "ja" | "en";
 
 const messages = {
   ja: {
@@ -100,18 +97,14 @@ const messages = {
   }
 } as const;
 
-const defaultCardDrafts: Record<Locale, readonly LocalizedCardDraft[]> = {
-  ja: [
-    { emoji: "🌸", phrase: "春に見た花のこと" },
-    { emoji: "🍙", phrase: "好きだったお弁当" },
-    { emoji: "🚃", phrase: "よく出かけた場所" }
-  ],
+const defaultCardDrafts = {
+  ja: DEFAULT_CARD_DRAFTS,
   en: [
     { emoji: "🌸", phrase: "Flowers we saw in spring" },
     { emoji: "🍙", phrase: "A favorite packed lunch" },
     { emoji: "🚃", phrase: "A place we often visited" }
   ]
-};
+} satisfies Record<Locale, readonly DraftMemoryCard[]>;
 
 export type MessageKey = keyof typeof messages.ja;
 export type Translator = (key: MessageKey, replacements?: Record<string, string | number>) => string;
@@ -137,7 +130,7 @@ export function createTranslator(locale: Locale): Translator {
   };
 }
 
-export function getDefaultCardDrafts(locale: Locale): readonly LocalizedCardDraft[] {
+export function getDefaultCardDrafts(locale: Locale): readonly DraftMemoryCard[] {
   return defaultCardDrafts[locale];
 }
 

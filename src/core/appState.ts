@@ -7,6 +7,13 @@ export interface AppState {
   premiumPurchased: boolean;
 }
 
+export interface AppStateSnapshot {
+  readonly cards?: readonly MemoryCard[];
+  readonly currentIndex?: number;
+  readonly firstStartedAt?: string;
+  readonly premiumPurchased?: boolean;
+}
+
 export function createInitialState(now: Date = new Date()): AppState {
   return {
     cards: DEFAULT_CARDS,
@@ -16,7 +23,7 @@ export function createInitialState(now: Date = new Date()): AppState {
   };
 }
 
-export function normalizeAppState(value: Partial<AppState> | undefined, now: Date = new Date()): AppState {
+export function normalizeAppState(value: AppStateSnapshot | undefined, now: Date = new Date()): AppState {
   const fallback = createInitialState(now);
   const cards = normalizeCards(Array.isArray(value?.cards) ? value.cards : fallback.cards);
 
