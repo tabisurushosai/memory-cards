@@ -234,11 +234,13 @@ function handleCardStageKeydown(event: KeyboardEvent): void {
 function renderEditor(): HTMLElement {
   const section = element("section", "panel editor");
   section.setAttribute("aria-labelledby", "editor-title");
+  section.setAttribute("aria-describedby", "editor-help");
 
   const title = element("h2");
   title.id = "editor-title";
   title.textContent = t("editorTitle");
   const help = element("p", "help-text");
+  help.id = "editor-help";
   help.textContent = t("editorHelp");
   const list = element("div", "editor-list");
 
@@ -266,18 +268,25 @@ function renderEditorEmptyState(): HTMLElement {
 function renderCardEditor(card: MemoryCard, index: number): HTMLElement {
   const row = element("form", "editor-row");
   const displayIndex = formatNumber(locale, index + 1);
-  row.setAttribute("aria-label", `${t("editorTitle")} ${displayIndex}`);
+  const rowTitleId = `card-editor-title-${index}`;
+  row.setAttribute("aria-labelledby", rowTitleId);
 
-  const emojiInput = input(`${t("emojiLabel")} ${displayIndex}`, card.emoji, 4);
+  const rowTitle = element("h3", "sr-only");
+  rowTitle.id = rowTitleId;
+  rowTitle.textContent = t("cardEditorAriaLabel", { index: displayIndex });
+
+  const emojiInput = input(`card-${index}-emoji`, card.emoji, 4);
   emojiInput.classList.add("emoji-input");
-  const phraseInput = input(`${t("phraseLabel")} ${displayIndex}`, card.phrase, 48);
+  const phraseInput = input(`card-${index}-phrase`, card.phrase, 48);
 
   const save = button(t("saveCard"), "primary", "submit");
   save.dataset["focusKey"] = saveCardFocusKey(index);
+  save.setAttribute("aria-label", t("saveCardAriaLabel", { index: displayIndex }));
   const remove = button(t("deleteCard"), "danger", "button");
+  remove.setAttribute("aria-label", t("deleteCardAriaLabel", { index: displayIndex }));
   remove.disabled = state.cards.length <= 1;
   if (remove.disabled) {
-    remove.setAttribute("aria-label", `${t("deleteCard")} (${t("cannotDeleteLast")})`);
+    remove.setAttribute("aria-label", t("deleteCardDisabledAriaLabel", { index: displayIndex }));
   }
 
   row.addEventListener("submit", (event) => {
@@ -307,6 +316,7 @@ function renderCardEditor(card: MemoryCard, index: number): HTMLElement {
   });
 
   row.append(
+    rowTitle,
     labeledField(t("emojiLabel"), emojiInput),
     labeledField(t("phraseLabel"), phraseInput),
     save,
@@ -397,18 +407,19 @@ function saveCardFocusKey(index: number): `save-card-${number}` {
 
 function labeledField(labelText: string, control: HTMLInputElement): HTMLElement {
   const label = element("label", "field");
+  label.htmlFor = control.id;
   const span = element("span");
   span.textContent = labelText;
   label.append(span, control);
   return label;
 }
 
-function input(label: string, value: string, maxLength: number): HTMLInputElement {
+function input(id: string, value: string, maxLength: number): HTMLInputElement {
   const control = document.createElement("input");
+  control.id = id;
   control.type = "text";
   control.value = value;
   control.maxLength = maxLength;
-  control.setAttribute("aria-label", label);
   control.autocomplete = "off";
   return control;
 }
