@@ -139,6 +139,16 @@ h2 {
   font-size: 1rem;
 }
 
+.guide-lead {
+  color: var(--color-text);
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.guide-copy {
+  line-height: 1.6;
+}
+
 .card-stage,
 .panel,
 .notes {
@@ -242,6 +252,13 @@ h2 {
 
 .empty-cards .button {
   margin-top: 2px;
+}
+
+.empty-cards-lead {
+  margin: -2px auto 0;
+  color: var(--color-text);
+  font-weight: 800;
+  line-height: 1.45;
 }
 
 .empty-cards-next-step {
