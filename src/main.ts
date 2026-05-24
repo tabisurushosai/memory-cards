@@ -72,7 +72,7 @@ function renderLoading(): void {
   panel.setAttribute("aria-atomic", "true");
   panel.setAttribute("aria-describedby", "loading-message");
 
-  const title = element("h1");
+  const title = element("h1", "state-title");
   title.textContent = t("appTitle");
   const message = element("p", "state-message");
   message.id = "loading-message";
@@ -106,7 +106,7 @@ function render(statusMessage = "", focusTarget?: FocusTarget): void {
 
 function renderHeader(): HTMLElement {
   const header = element("header", "header");
-  const title = element("h1");
+  const title = element("h1", "app-title");
   title.textContent = t("appTitle");
   const subtitle = element("p", "subtitle");
   subtitle.textContent = t("appSubtitle");
@@ -146,15 +146,15 @@ function renderEmptyCardsPanel(): HTMLElement {
   section.setAttribute("aria-labelledby", "empty-cards-title");
   section.setAttribute("aria-describedby", "empty-cards-message empty-cards-next-step");
 
-  const title = element("h2");
+  const title = element("h2", "state-title");
   title.id = "empty-cards-title";
   title.textContent = t("emptyCardsTitle");
 
-  const message = element("p", "help-text");
+  const message = element("p", "help-text state-copy");
   message.id = "empty-cards-message";
   message.textContent = t("emptyCardsMessage");
 
-  const nextStep = element("p", "empty-cards-next-step");
+  const nextStep = element("p", "empty-cards-next-step state-copy");
   nextStep.id = "empty-cards-next-step";
   nextStep.textContent = t("emptyCardsNextStep");
 
@@ -259,10 +259,10 @@ function renderEditor(): HTMLElement {
   section.setAttribute("aria-labelledby", "editor-title");
   section.setAttribute("aria-describedby", "editor-help");
 
-  const title = element("h2");
+  const title = element("h2", "panel-title");
   title.id = "editor-title";
   title.textContent = t("editorTitle");
-  const help = element("p", "help-text");
+  const help = element("p", "help-text panel-copy");
   help.id = "editor-help";
   help.textContent = t("editorHelp");
   const list = element("div", "editor-list");
@@ -353,11 +353,11 @@ function renderPremiumPanel(): HTMLElement {
   const section = element("section", "panel premium");
   section.setAttribute("aria-labelledby", "premium-title");
 
-  const title = element("h2");
+  const title = element("h2", "panel-title");
   title.id = "premium-title";
   title.textContent = t("premiumTitle");
 
-  const description = element("p", "help-text");
+  const description = element("p", "help-text panel-copy");
   description.textContent = t("premiumDescription", {
     price: PREMIUM_PRICE_LABEL,
     trialDays: TRIAL_DAYS
