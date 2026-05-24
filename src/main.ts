@@ -1,12 +1,12 @@
 import "./styles.css";
 import {
-  MemoryCard,
   createMemoryCard,
   getNextIndex,
   getPreviousIndex,
-  updateMemoryCard
+  updateMemoryCard,
+  type MemoryCard
 } from "./core/cards";
-import { AppState, normalizeAppState } from "./core/appState";
+import { normalizeAppState, type AppState } from "./core/appState";
 import {
   PREMIUM_PRICE_LABEL,
   STRIPE_PAYMENT_LINK,
@@ -139,7 +139,7 @@ function renderCardStage(card: MemoryCard): HTMLElement {
   const section = element("section", "card-stage");
   section.id = "card-stage";
   section.tabIndex = 0;
-  section.dataset.focusKey = "card-stage";
+  section.dataset["focusKey"] = "card-stage";
   section.setAttribute("aria-labelledby", "card-stage-title");
   section.setAttribute("aria-describedby", "card-keyboard-hint current-card-count");
   section.addEventListener("keydown", handleCardStageKeydown);
@@ -162,7 +162,7 @@ function renderCardStage(card: MemoryCard): HTMLElement {
 
   const controls = element("div", "controls");
   const previous = button(t("previous"), "secondary");
-  previous.dataset.focusKey = "previous-card";
+  previous.dataset["focusKey"] = "previous-card";
   previous.setAttribute("aria-controls", "current-card");
   previous.addEventListener("click", () => {
     state.currentIndex = getPreviousIndex(state.currentIndex, state.cards.length);
@@ -179,7 +179,7 @@ function renderCardStage(card: MemoryCard): HTMLElement {
   });
 
   const next = button(t("next"), "primary");
-  next.dataset.focusKey = "next-card";
+  next.dataset["focusKey"] = "next-card";
   next.setAttribute("aria-controls", "current-card");
   next.addEventListener("click", () => {
     state.currentIndex = getNextIndex(state.currentIndex, state.cards.length);

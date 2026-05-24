@@ -1,4 +1,4 @@
-import { DEFAULT_CARDS, MemoryCard, clampCardIndex, normalizeCards } from "./cards";
+import { DEFAULT_CARDS, clampCardIndex, normalizeCards, type MemoryCard } from "./cards";
 
 export interface AppState {
   cards: MemoryCard[];
