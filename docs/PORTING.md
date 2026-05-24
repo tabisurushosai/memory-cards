@@ -16,16 +16,17 @@ The persisted state remains under the `memoryCardsState` key and has the `AppSta
 The storage interfaces are intentionally split:
 
 - `AppStorage` loads and saves the whole app state for UI code.
-- `StorageAdapter` is the small key/value persistence boundary for Chrome, iOS, Android, or test adapters.
+- `StorageAdapter` is the small key/value persistence boundary for Chrome, iOS, Android, or test adapters. Its `read()` and `write()` methods are the only operations platform adapters need to provide.
 - `createAppStorageFromAdapter()` wraps any `StorageAdapter` with the shared app-state key, so platform adapters do not duplicate key handling.
 
 When adding a platform:
 
 1. Implement `StorageAdapter` from `src/storage/StorageAdapter.ts` with local device storage, or implement `AppStorage` directly if the platform already exposes app-state persistence.
 2. Keep the `memoryCardsState` key and stored `AppState` shape unchanged.
-3. Return `StoredAppState | undefined` from `load()` without adding platform metadata to the stored value.
-4. Pass loaded data through `normalizeAppState()` before use.
-5. Keep saves local-only unless the product requirement explicitly changes.
+3. Keep adapter values as plain structured data. Do not store platform metadata alongside the app state.
+4. Return `StoredAppState | undefined` from `load()` without adding platform metadata to the stored value.
+5. Pass loaded data through `normalizeAppState()` before use.
+6. Keep saves local-only unless the product requirement explicitly changes.
 
 For Chrome, `ChromeStorageAdapter` wraps the minimal `chrome.storage.local` `get`/`set` surface, and `createChromeExtensionAppStorage()` is the only storage factory that probes `globalThis.chrome`. Native iOS or Android shells should avoid importing `src/storage/chromeAppStorage.ts`; instead, provide an equivalent `StorageAdapter` backed by local persistence APIs and pass it to `createAppStorageFromAdapter()`.
 
@@ -36,6 +37,7 @@ For Chrome, `ChromeStorageAdapter` wraps the minimal `chrome.storage.local` `get
 - Import only `src/storage/index.ts` or `src/storage/StorageAdapter.ts` from native code unless the target is the Chrome extension.
 - Keep UI decisions platform-neutral where practical: call pure functions from `src/core/`, then render with the current platform's view layer.
 - If a native target needs platform probes such as locale detection, add them outside `src/core/` and pass the result in.
+- Keep native persistence adapters thin: map `read(key)` and `write(key, value)` to the platform's local key/value API, and let `createAppStorageFromAdapter()` own the `memoryCardsState` key.
 
 ## Core portability guard
 

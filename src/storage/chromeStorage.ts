@@ -1,19 +1,19 @@
-import type { StorageAdapter } from "./StorageAdapter";
+import type { StorageAdapter, StorageKey } from "./StorageAdapter";
 
 export interface ChromeStorageArea {
-  get(key: string): Promise<Record<string, unknown>>;
-  set(items: Record<string, unknown>): Promise<void>;
+  get(key: StorageKey): Promise<Record<StorageKey, unknown>>;
+  set(items: Readonly<Record<StorageKey, unknown>>): Promise<void>;
 }
 
 export class ChromeStorageAdapter implements StorageAdapter {
   constructor(private readonly storageArea: ChromeStorageArea) {}
 
-  async get(key: string): Promise<unknown | undefined> {
+  async read(key: StorageKey): Promise<unknown | undefined> {
     const result = await this.storageArea.get(key);
     return result[key];
   }
 
-  async set(key: string, value: unknown): Promise<void> {
+  async write(key: StorageKey, value: unknown): Promise<void> {
     await this.storageArea.set({ [key]: value });
   }
 }

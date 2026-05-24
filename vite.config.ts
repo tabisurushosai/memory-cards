@@ -47,6 +47,9 @@ export default defineConfig({
     outDir: extensionOutDir,
     emptyOutDir: true,
     copyPublicDir: true,
+    modulePreload: {
+      polyfill: false
+    },
     sourcemap: false,
     rollupOptions: {
       output: {

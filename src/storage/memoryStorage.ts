@@ -1,13 +1,13 @@
-import type { StorageAdapter } from "./StorageAdapter";
+import type { StorageAdapter, StorageKey } from "./StorageAdapter";
 
 export class MemoryStorageAdapter implements StorageAdapter {
-  private readonly values = new Map<string, unknown>();
+  private readonly values = new Map<StorageKey, unknown>();
 
-  async get(key: string): Promise<unknown | undefined> {
+  async read(key: StorageKey): Promise<unknown | undefined> {
     return this.values.get(key);
   }
 
-  async set(key: string, value: unknown): Promise<void> {
+  async write(key: StorageKey, value: unknown): Promise<void> {
     this.values.set(key, value);
   }
 }
