@@ -8,12 +8,12 @@ export interface ChromeStorageArea {
 export class ChromeStorageAdapter implements StorageAdapter {
   constructor(private readonly storageArea: ChromeStorageArea) {}
 
-  async get<TValue>(key: string): Promise<TValue | undefined> {
+  async get(key: string): Promise<unknown | undefined> {
     const result = await this.storageArea.get(key);
-    return result[key] as TValue | undefined;
+    return result[key];
   }
 
-  async set<TValue>(key: string, value: TValue): Promise<void> {
+  async set(key: string, value: unknown): Promise<void> {
     await this.storageArea.set({ [key]: value });
   }
 }

@@ -5,6 +5,6 @@
  * defaults and normalization stay in src/core and AppStorage.
  */
 export interface StorageAdapter {
-  get<TValue>(key: string): Promise<TValue | undefined>;
-  set<TValue>(key: string, value: TValue): Promise<void>;
+  get(key: string): Promise<unknown | undefined>;
+  set(key: string, value: unknown): Promise<void>;
 }

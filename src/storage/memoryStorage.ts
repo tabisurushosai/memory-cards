@@ -3,11 +3,11 @@ import type { StorageAdapter } from "./StorageAdapter";
 export class MemoryStorageAdapter implements StorageAdapter {
   private readonly values = new Map<string, unknown>();
 
-  async get<TValue>(key: string): Promise<TValue | undefined> {
-    return this.values.get(key) as TValue | undefined;
+  async get(key: string): Promise<unknown | undefined> {
+    return this.values.get(key);
   }
 
-  async set<TValue>(key: string, value: TValue): Promise<void> {
+  async set(key: string, value: unknown): Promise<void> {
     this.values.set(key, value);
   }
 }

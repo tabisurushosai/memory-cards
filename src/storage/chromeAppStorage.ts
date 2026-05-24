@@ -1,6 +1,7 @@
 import { createAppStorageFromAdapter, type AppStorage } from "./AppStorage";
 import { ChromeStorageAdapter, type ChromeStorageArea } from "./chromeStorage";
 import { MemoryStorageAdapter } from "./memoryStorage";
+import { getChromeGlobal } from "../platform/chromeGlobal";
 
 interface ChromeStorageGlobal {
   storage?: {
@@ -18,6 +19,6 @@ export function createChromeExtensionAppStorage(): AppStorage {
 }
 
 function getChromeLocalStorageArea(): ChromeStorageArea | undefined {
-  const chromeGlobal = (globalThis as typeof globalThis & { chrome?: ChromeStorageGlobal }).chrome;
+  const chromeGlobal = getChromeGlobal<ChromeStorageGlobal>();
   return chromeGlobal?.storage?.local;
 }
