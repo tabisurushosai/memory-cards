@@ -13,9 +13,14 @@ This app is written so the same card logic can be reused by Chrome, iOS, Android
 
 The persisted state remains under the `memoryCardsState` key and has the `AppState` shape from `src/core/appState.ts`.
 
+The storage interfaces are intentionally split:
+
+- `AppStorage` loads and saves the whole app state for UI code.
+- `StorageAdapter` is the small key/value persistence boundary for Chrome, iOS, Android, or test adapters.
+
 When adding a platform:
 
-1. Implement `StorageAdapter` with local device storage, or implement `AppStorage` directly if the platform already exposes app-state persistence.
+1. Implement `StorageAdapter` from `src/storage/StorageAdapter.ts` with local device storage, or implement `AppStorage` directly if the platform already exposes app-state persistence.
 2. Keep the `memoryCardsState` key and stored `AppState` shape unchanged.
 3. Return `StoredAppState | undefined` from `load()` without adding platform metadata to the stored value.
 4. Pass loaded data through `normalizeAppState()` before use.
@@ -29,6 +34,12 @@ For Chrome, `ChromeStorageAdapter` wraps the minimal `chrome.storage.local` `get
 - Put iOS/Android persistence bridges behind `StorageAdapter` and keep them in `src/storage/` or the native shell layer.
 - Keep UI decisions platform-neutral where practical: call pure functions from `src/core/`, then render with the current platform's view layer.
 - If a native target needs platform probes such as locale detection, add them outside `src/core/` and pass the result in.
+
+## Core portability guard
+
+`npm run build` first compiles `src/core/` with `tsconfig.core.json`, which excludes DOM and browser extension types. If this step fails, move the platform-specific code back behind `src/platform/`, `src/storage/`, or the UI shell and keep `src/core/` as data and pure decision logic.
+
+For iOS or Android, start by reusing `src/core/appState.ts`, `src/core/cards.ts`, and `src/core/premium.ts` unchanged. The native shell should provide its own view layer and a local `StorageAdapter` implementation, then call `normalizeAppState()` after loading persisted data.
 
 ## Platform rules
 

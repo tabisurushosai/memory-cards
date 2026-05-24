@@ -1,6 +1,8 @@
 import { AdapterAppStorage, type AppStorage } from "./AppStorage";
 import { ChromeStorageAdapter, type ChromeStorageArea } from "./chromeStorage";
 import { MemoryStorageAdapter } from "./memoryStorage";
+export type { AppStorage, StoredAppState } from "./AppStorage";
+export type { StorageAdapter } from "./StorageAdapter";
 
 interface ChromeStorageGlobal {
   storage?: {

@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc -p tsconfig.core.json --noEmit && tsc --noEmit && vite build",
     "preview": "vite preview"
   },
   "repository": {
