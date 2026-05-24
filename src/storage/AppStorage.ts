@@ -18,11 +18,11 @@ export class AdapterAppStorage implements AppStorage {
   constructor(private readonly adapter: StorageAdapter) {}
 
   async load(): Promise<StoredAppState | undefined> {
-    const value = await this.adapter.get(APP_STORAGE_KEY);
+    const value = await this.adapter.read(APP_STORAGE_KEY);
     return value as StoredAppState | undefined;
   }
 
   async save(state: Readonly<AppState>): Promise<void> {
-    await this.adapter.set(APP_STORAGE_KEY, state);
+    await this.adapter.write(APP_STORAGE_KEY, state);
   }
 }

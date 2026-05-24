@@ -4,7 +4,9 @@
  * Implementations should only move values in and out of local storage. App-state
  * defaults and normalization stay in src/core and AppStorage.
  */
+export type StorageKey = string;
+
 export interface StorageAdapter {
-  get(key: string): Promise<unknown | undefined>;
-  set(key: string, value: unknown): Promise<void>;
+  read(key: StorageKey): Promise<unknown | undefined>;
+  write(key: StorageKey, value: unknown): Promise<void>;
 }
