@@ -29,7 +29,11 @@ if (!appRoot) {
 const app = appRoot;
 let state: AppState;
 let showFirstRunGuide = false;
-type FocusTarget = "card-stage" | "previous-card" | "next-card";
+type FocusTarget =
+  | "card-stage"
+  | "previous-card"
+  | "next-card"
+  | `save-card-${number}`;
 
 async function boot(): Promise<void> {
   document.documentElement.lang = locale;
@@ -142,6 +146,7 @@ function renderCardStage(card: MemoryCard): HTMLElement {
   section.dataset["focusKey"] = "card-stage";
   section.setAttribute("aria-labelledby", "card-stage-title");
   section.setAttribute("aria-describedby", "card-keyboard-hint current-card-count");
+  section.setAttribute("aria-keyshortcuts", "ArrowLeft ArrowRight");
   section.addEventListener("keydown", handleCardStageKeydown);
 
   const title = element("h2", "sr-only");
@@ -152,6 +157,8 @@ function renderCardStage(card: MemoryCard): HTMLElement {
   cardPanel.id = "current-card";
   cardPanel.setAttribute("aria-labelledby", "current-card-phrase");
   cardPanel.setAttribute("aria-describedby", "current-card-count");
+  cardPanel.setAttribute("aria-live", "polite");
+  cardPanel.setAttribute("aria-atomic", "true");
   const emoji = element("div", "memory-emoji");
   emoji.setAttribute("aria-hidden", "true");
   emoji.textContent = card.emoji;
@@ -163,6 +170,7 @@ function renderCardStage(card: MemoryCard): HTMLElement {
   const controls = element("div", "controls");
   const previous = button(t("previous"), "secondary");
   previous.dataset["focusKey"] = "previous-card";
+  previous.setAttribute("aria-label", t("previousCardAriaLabel"));
   previous.setAttribute("aria-controls", "current-card");
   previous.addEventListener("click", () => {
     state.currentIndex = getPreviousIndex(state.currentIndex, state.cards.length);
@@ -180,6 +188,7 @@ function renderCardStage(card: MemoryCard): HTMLElement {
 
   const next = button(t("next"), "primary");
   next.dataset["focusKey"] = "next-card";
+  next.setAttribute("aria-label", t("nextCardAriaLabel"));
   next.setAttribute("aria-controls", "current-card");
   next.addEventListener("click", () => {
     state.currentIndex = getNextIndex(state.currentIndex, state.cards.length);
@@ -235,7 +244,7 @@ function renderEditor(): HTMLElement {
   const add = button(t("addCard"), "primary wide");
   add.addEventListener("click", () => {
     addNewCard();
-    void saveAndRender(t("saved"));
+    void saveAndRender(t("saved"), "card-stage");
   });
 
   section.append(title, help, list, add);
@@ -258,6 +267,7 @@ function renderCardEditor(card: MemoryCard, index: number): HTMLElement {
   const phraseInput = input(`${t("phraseLabel")} ${displayIndex}`, card.phrase, 48);
 
   const save = button(t("saveCard"), "primary", "submit");
+  save.dataset["focusKey"] = saveCardFocusKey(index);
   const remove = button(t("deleteCard"), "danger", "button");
   remove.disabled = state.cards.length <= 1;
   if (remove.disabled) {
@@ -275,7 +285,7 @@ function renderCardEditor(card: MemoryCard, index: number): HTMLElement {
         : existing
     );
     state.currentIndex = index;
-    void saveAndRender(t("saved"));
+    void saveAndRender(t("saved"), saveCardFocusKey(index));
   });
 
   remove.addEventListener("click", () => {
@@ -286,7 +296,8 @@ function renderCardEditor(card: MemoryCard, index: number): HTMLElement {
 
     state.cards = state.cards.filter((existing) => existing.id !== card.id);
     state.currentIndex = Math.min(state.currentIndex, state.cards.length - 1);
-    void saveAndRender(t("saved"));
+    const nextFocusIndex = Math.min(index, state.cards.length - 1);
+    void saveAndRender(t("saved"), saveCardFocusKey(nextFocusIndex));
   });
 
   row.append(
@@ -367,6 +378,10 @@ function restoreFocus(focusTarget?: FocusTarget): void {
 
   const target = app.querySelector<HTMLElement>(`[data-focus-key="${focusTarget}"]`);
   target?.focus({ preventScroll: true });
+}
+
+function saveCardFocusKey(index: number): `save-card-${number}` {
+  return `save-card-${index}`;
 }
 
 function labeledField(labelText: string, control: HTMLInputElement): HTMLElement {
