@@ -13,7 +13,14 @@ import {
   TRIAL_DAYS,
   calculatePremiumStatus
 } from "./core/premium";
-import { createTranslator, formatDate, formatNumber, formatRemainingDays, getLocale } from "./i18n";
+import {
+  createTranslator,
+  formatDate,
+  formatNumber,
+  formatRemainingDays,
+  getDefaultCardDrafts,
+  getLocale
+} from "./i18n";
 import { getPreferredLanguage } from "./platform/language";
 import { createAppStorage } from "./storage";
 
@@ -41,9 +48,18 @@ async function boot(): Promise<void> {
   renderLoading();
   const storedState = await storage.load();
   showFirstRunGuide = storedState === undefined;
-  state = normalizeAppState(storedState);
+  state = showFirstRunGuide ? createLocalizedInitialState() : normalizeAppState(storedState);
   await storage.save(state);
   render();
+}
+
+function createLocalizedInitialState(now = new Date()): AppState {
+  return normalizeAppState(
+    {
+      cards: getDefaultCardDrafts(locale).map((draft) => createMemoryCard(draft, now))
+    },
+    now
+  );
 }
 
 function renderLoading(): void {
@@ -295,7 +311,7 @@ function renderCardEditor(card: MemoryCard, index: number): HTMLElement {
       existing.id === card.id
         ? updateMemoryCard(existing, {
             emoji: emojiInput.value,
-            phrase: phraseInput.value
+            phrase: phraseInput.value.trim().length > 0 ? phraseInput.value : t("emptyPhraseFallback")
           })
         : existing
     );
