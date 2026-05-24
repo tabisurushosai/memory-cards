@@ -28,13 +28,16 @@ if (!appRoot) {
 
 const app = appRoot;
 let state: AppState;
+let showFirstRunGuide = false;
 type FocusTarget = "card-stage" | "previous-card" | "next-card";
 
 async function boot(): Promise<void> {
   document.documentElement.lang = locale;
   document.title = t("appTitle");
   renderLoading();
-  state = normalizeAppState(await storage.load());
+  const storedState = await storage.load();
+  showFirstRunGuide = storedState === undefined;
+  state = normalizeAppState(storedState);
   await storage.save(state);
   render();
 }
@@ -63,8 +66,9 @@ function render(statusMessage = "", focusTarget?: FocusTarget): void {
   const container = element("div", "shell");
   const content = [
     renderHeader(),
+    ...(showFirstRunGuide ? [renderFirstRunGuide()] : []),
     ...(statusMessage ? [renderStatusBanner(statusMessage)] : []),
-    renderCardStage(currentCard),
+    currentCard ? renderCardStage(currentCard) : renderEmptyCardsPanel(),
     renderEditor(),
     renderPremiumPanel(),
     renderNotes()
@@ -86,12 +90,49 @@ function renderHeader(): HTMLElement {
   return header;
 }
 
+function renderFirstRunGuide(): HTMLElement {
+  const guide = element("aside", "onboarding-guide");
+  guide.setAttribute("aria-labelledby", "onboarding-title");
+
+  const title = element("h2", "guide-title");
+  title.id = "onboarding-title";
+  title.textContent = t("onboardingTitle");
+
+  const message = element("p");
+  message.textContent = t("onboardingGuide");
+
+  guide.append(title, message);
+  return guide;
+}
+
 function renderStatusBanner(statusMessage: string): HTMLElement {
   const banner = element("aside", "status-banner");
   banner.setAttribute("role", "status");
   banner.setAttribute("aria-live", "polite");
   banner.textContent = statusMessage;
   return banner;
+}
+
+function renderEmptyCardsPanel(): HTMLElement {
+  const section = element("section", "card-stage empty-cards");
+  section.id = "card-stage";
+  section.setAttribute("aria-labelledby", "empty-cards-title");
+
+  const title = element("h2");
+  title.id = "empty-cards-title";
+  title.textContent = t("emptyCardsTitle");
+
+  const message = element("p", "help-text");
+  message.textContent = t("emptyCardsMessage");
+
+  const add = button(t("emptyCardsAction"), "primary wide");
+  add.addEventListener("click", () => {
+    addNewCard();
+    void saveAndRender(t("saved"), "card-stage");
+  });
+
+  section.append(title, message, add);
+  return section;
 }
 
 function renderCardStage(card: MemoryCard): HTMLElement {
@@ -183,25 +224,28 @@ function renderEditor(): HTMLElement {
   help.textContent = t("editorHelp");
   const list = element("div", "editor-list");
 
-  state.cards.forEach((card, index) => {
-    list.append(renderCardEditor(card, index));
-  });
+  if (state.cards.length === 0) {
+    list.append(renderEditorEmptyState());
+  } else {
+    state.cards.forEach((card, index) => {
+      list.append(renderCardEditor(card, index));
+    });
+  }
 
   const add = button(t("addCard"), "primary wide");
   add.addEventListener("click", () => {
-    state.cards = [
-      ...state.cards,
-      createMemoryCard({
-        emoji: t("addEmojiDefault"),
-        phrase: t("addPhraseDefault")
-      })
-    ];
-    state.currentIndex = state.cards.length - 1;
+    addNewCard();
     void saveAndRender(t("saved"));
   });
 
   section.append(title, help, list, add);
   return section;
+}
+
+function renderEditorEmptyState(): HTMLElement {
+  const message = element("p", "empty-editor-message");
+  message.textContent = t("emptyEditorMessage");
+  return message;
 }
 
 function renderCardEditor(card: MemoryCard, index: number): HTMLElement {
@@ -303,6 +347,17 @@ function renderNotes(): HTMLElement {
 async function saveAndRender(statusMessage = "", focusTarget?: FocusTarget): Promise<void> {
   await storage.save(state);
   render(statusMessage, focusTarget);
+}
+
+function addNewCard(): void {
+  state.cards = [
+    ...state.cards,
+    createMemoryCard({
+      emoji: t("addEmojiDefault"),
+      phrase: t("addPhraseDefault")
+    })
+  ];
+  state.currentIndex = state.cards.length - 1;
 }
 
 function restoreFocus(focusTarget?: FocusTarget): void {
