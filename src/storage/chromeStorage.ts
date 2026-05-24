@@ -1,20 +1,19 @@
-import type { AppState } from "../core/appState";
-import {
-  APP_STORAGE_KEY,
-  type AppStorage,
-  type KeyValueStorageArea,
-  type StoredAppState
-} from "./AppStorage";
+import type { StorageAdapter } from "./AppStorage";
 
-export class ChromeAppStorage implements AppStorage {
-  constructor(private readonly storageArea: KeyValueStorageArea) {}
+export interface ChromeStorageArea {
+  get(key: string): Promise<Record<string, unknown>>;
+  set(items: Record<string, unknown>): Promise<void>;
+}
 
-  async load(): Promise<StoredAppState | undefined> {
-    const result = await this.storageArea.get(APP_STORAGE_KEY);
-    return result[APP_STORAGE_KEY] as StoredAppState | undefined;
+export class ChromeStorageAdapter implements StorageAdapter {
+  constructor(private readonly storageArea: ChromeStorageArea) {}
+
+  async get<TValue>(key: string): Promise<TValue | undefined> {
+    const result = await this.storageArea.get(key);
+    return result[key] as TValue | undefined;
   }
 
-  async save(state: AppState): Promise<void> {
-    await this.storageArea.set({ [APP_STORAGE_KEY]: state });
+  async set<TValue>(key: string, value: TValue): Promise<void> {
+    await this.storageArea.set({ [key]: value });
   }
 }

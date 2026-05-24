@@ -4,12 +4,24 @@ export const APP_STORAGE_KEY = "memoryCardsState";
 
 export type StoredAppState = Partial<AppState>;
 
-export interface KeyValueStorageArea {
-  get(key: string): Promise<Record<string, unknown>>;
-  set(items: Record<string, unknown>): Promise<void>;
-}
-
 export interface AppStorage {
   load(): Promise<StoredAppState | undefined>;
   save(state: AppState): Promise<void>;
+}
+
+export interface StorageAdapter {
+  get<TValue>(key: string): Promise<TValue | undefined>;
+  set<TValue>(key: string, value: TValue): Promise<void>;
+}
+
+export class AdapterAppStorage implements AppStorage {
+  constructor(private readonly adapter: StorageAdapter) {}
+
+  async load(): Promise<StoredAppState | undefined> {
+    return this.adapter.get<StoredAppState>(APP_STORAGE_KEY);
+  }
+
+  async save(state: AppState): Promise<void> {
+    await this.adapter.set(APP_STORAGE_KEY, state);
+  }
 }

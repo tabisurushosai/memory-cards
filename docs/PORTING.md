@@ -15,12 +15,20 @@ The persisted state remains under the `memoryCardsState` key and has the `AppSta
 
 When adding a platform:
 
-1. Implement the `AppStorage` interface with local device storage.
-2. Return `StoredAppState | undefined` from `load()` without changing the stored shape.
-3. Pass loaded data through `normalizeAppState()` before use.
-4. Keep saves local-only unless the product requirement explicitly changes.
+1. Implement `StorageAdapter` with local device storage, or implement `AppStorage` directly if the platform already exposes app-state persistence.
+2. Keep the `memoryCardsState` key and stored `AppState` shape unchanged.
+3. Return `StoredAppState | undefined` from `load()` without adding platform metadata to the stored value.
+4. Pass loaded data through `normalizeAppState()` before use.
+5. Keep saves local-only unless the product requirement explicitly changes.
 
-For Chrome, `ChromeAppStorage` receives a minimal `KeyValueStorageArea`, currently backed by `chrome.storage.local`. Native iOS or Android shells should provide an equivalent adapter backed by their local persistence APIs.
+For Chrome, `ChromeStorageAdapter` wraps the minimal `chrome.storage.local` `get`/`set` surface and `AdapterAppStorage` applies the shared app-state key. Native iOS or Android shells should provide an equivalent `StorageAdapter` backed by their local persistence APIs.
+
+## Native shell checklist
+
+- Treat `src/core/` as a one-way dependency: UI, storage, and platform shells may import it, but `src/core/` must not import `src/storage/`, `src/platform/`, DOM APIs, `chrome.*`, or native SDK APIs.
+- Put iOS/Android persistence bridges behind `StorageAdapter` and keep them in `src/storage/` or the native shell layer.
+- Keep UI decisions platform-neutral where practical: call pure functions from `src/core/`, then render with the current platform's view layer.
+- If a native target needs platform probes such as locale detection, add them outside `src/core/` and pass the result in.
 
 ## Platform rules
 
