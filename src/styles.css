@@ -6,6 +6,7 @@
   --color-muted: #4b5563;
   --color-muted-bg: #ece4d6;
   --color-border: #1f2937;
+  --color-border-soft: #d6c8b4;
   --color-card: #102033;
   --color-card-soft: #17314d;
   --color-accent: #f6c453;
@@ -38,7 +39,7 @@ body {
   width: min(100vw, 460px);
   min-width: 320px;
   min-height: 100vh;
-  margin: 0;
+  margin: 0 auto;
   background: var(--color-bg);
   color: var(--color-text);
   line-height: 1.45;
@@ -52,7 +53,7 @@ input {
 
 .shell {
   display: grid;
-  gap: 18px;
+  gap: 20px;
   padding: clamp(18px, 5vw, 26px);
 }
 
@@ -88,8 +89,9 @@ h2 {
 .subtitle,
 .help-text,
 .onboarding-guide,
+.state-message,
 .notes {
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 .subtitle,
@@ -102,10 +104,10 @@ h2 {
 
 .onboarding-guide {
   display: grid;
-  gap: 6px;
-  border: 2px solid rgba(31, 41, 55, 0.2);
+  gap: 8px;
+  border: 2px solid rgba(31, 41, 55, 0.22);
   border-radius: 18px;
-  padding: 14px 16px;
+  padding: 15px 16px;
   background: var(--color-accent-soft);
 }
 
@@ -126,7 +128,7 @@ h2 {
 .card-stage {
   display: grid;
   gap: 20px;
-  padding: clamp(18px, 4.5vw, 22px);
+  padding: clamp(19px, 4.5vw, 24px);
 }
 
 .sr-only {
@@ -149,6 +151,7 @@ h2 {
   background:
     linear-gradient(180deg, var(--color-card-soft), var(--color-card));
   color: #ffffff;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
   text-align: center;
 }
 
@@ -163,24 +166,26 @@ h2 {
   font-size: clamp(1.45rem, 7vw, 1.8rem);
   font-weight: 800;
   line-height: 1.3;
+  text-wrap: balance;
 }
 
 .controls {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .card-count {
   min-width: 70px;
   border-radius: 999px;
-  padding: 10px 12px;
+  padding: 10px 14px;
   background: var(--color-muted-bg);
   font-size: 1rem;
   font-weight: 700;
   line-height: 1.2;
   text-align: center;
+  white-space: nowrap;
 }
 
 .keyboard-hint {
@@ -193,14 +198,23 @@ h2 {
 
 .empty-cards {
   align-content: center;
+  gap: 16px;
   min-height: 240px;
+  border-style: dashed;
+  background:
+    linear-gradient(180deg, rgba(255, 253, 247, 0.92), rgba(255, 253, 247, 0.98));
   text-align: center;
+}
+
+.empty-cards .help-text {
+  max-width: 30ch;
+  margin: 0 auto;
 }
 
 .panel {
   display: grid;
-  gap: 16px;
-  padding: clamp(18px, 4.5vw, 22px);
+  gap: 18px;
+  padding: clamp(19px, 4.5vw, 24px);
 }
 
 .editor-list {
@@ -209,8 +223,10 @@ h2 {
 }
 
 .empty-editor-message {
-  border-top: 2px solid #d7cbb8;
-  padding-top: 16px;
+  border: 1px solid var(--color-border-soft);
+  border-radius: 14px;
+  padding: 13px 14px;
+  background: #fbf6ed;
   color: var(--color-muted);
   font-weight: 700;
   line-height: 1.5;
@@ -218,10 +234,12 @@ h2 {
 
 .editor-row {
   display: grid;
-  grid-template-columns: minmax(84px, 0.42fr) minmax(0, 1fr);
+  grid-template-columns: minmax(76px, 96px) minmax(0, 1fr);
   gap: 12px;
-  border-top: 2px solid #d7cbb8;
-  padding-top: 16px;
+  border: 1px solid var(--color-border-soft);
+  border-radius: 16px;
+  padding: 12px;
+  background: #fbf6ed;
 }
 
 .field {
@@ -246,6 +264,10 @@ input {
   font: inherit;
 }
 
+input:hover:not(:disabled) {
+  background: #ffffff;
+}
+
 .emoji-input {
   text-align: center;
   font-size: 1.2rem;
@@ -264,6 +286,10 @@ input {
   line-height: 1.15;
   box-shadow: 0 3px 0 var(--color-border);
   touch-action: manipulation;
+}
+
+.editor-row .button {
+  align-self: end;
 }
 
 .button:hover:not(:disabled) {
@@ -335,15 +361,18 @@ input:focus-visible,
 .notes {
   display: grid;
   gap: 10px;
-  padding: 16px;
+  padding: 17px 16px;
   background: var(--color-surface-strong);
   font-size: 0.95rem;
 }
 
 .status-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
   border: 2px solid rgba(15, 107, 56, 0.25);
   border-radius: 16px;
-  padding: 11px 14px;
+  padding: 12px 14px;
   background: var(--color-success-bg);
   color: var(--color-success);
   font-weight: 800;
@@ -351,16 +380,30 @@ input:focus-visible,
   box-shadow: 0 3px 0 rgba(15, 107, 56, 0.2);
 }
 
+.status-banner::before {
+  flex: 0 0 auto;
+  width: 0.7em;
+  height: 0.7em;
+  margin-top: 0.22em;
+  border-radius: 999px;
+  background: currentColor;
+  content: "";
+}
+
 .state-panel {
-  gap: 12px;
-  padding-block: 28px;
+  gap: 14px;
+  padding-block: 32px;
   text-align: center;
 }
 
 .state-message {
   color: var(--color-muted);
   font-weight: 700;
-  line-height: 1.5;
+}
+
+.state-panel .state-message {
+  max-width: 26ch;
+  margin: 0 auto;
 }
 
 @media (max-width: 360px) {
