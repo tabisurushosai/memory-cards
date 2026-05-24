@@ -2,11 +2,11 @@ import type { AppState } from "../core/appState";
 
 export const APP_STORAGE_KEY = "memoryCardsState";
 
-export type StoredAppState = Partial<AppState>;
+export type StoredAppState = Readonly<Partial<AppState>>;
 
 export interface AppStorage {
   load(): Promise<StoredAppState | undefined>;
-  save(state: AppState): Promise<void>;
+  save(state: Readonly<AppState>): Promise<void>;
 }
 
 export interface StorageAdapter {
@@ -21,7 +21,7 @@ export class AdapterAppStorage implements AppStorage {
     return this.adapter.get<StoredAppState>(APP_STORAGE_KEY);
   }
 
-  async save(state: AppState): Promise<void> {
+  async save(state: Readonly<AppState>): Promise<void> {
     await this.adapter.set(APP_STORAGE_KEY, state);
   }
 }
