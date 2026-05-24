@@ -87,15 +87,31 @@ h2 {
 
 .subtitle,
 .help-text,
+.onboarding-guide,
 .notes {
   line-height: 1.5;
 }
 
 .subtitle,
 .help-text,
+.onboarding-guide,
 .payment-placeholder,
 .notes {
   color: var(--color-muted);
+}
+
+.onboarding-guide {
+  display: grid;
+  gap: 6px;
+  border: 2px solid rgba(31, 41, 55, 0.2);
+  border-radius: 18px;
+  padding: 14px 16px;
+  background: var(--color-accent-soft);
+}
+
+.guide-title {
+  color: var(--color-text);
+  font-size: 1rem;
 }
 
 .card-stage,
@@ -175,6 +191,12 @@ h2 {
   text-align: center;
 }
 
+.empty-cards {
+  align-content: center;
+  min-height: 240px;
+  text-align: center;
+}
+
 .panel {
   display: grid;
   gap: 16px;
@@ -184,6 +206,14 @@ h2 {
 .editor-list {
   display: grid;
   gap: 12px;
+}
+
+.empty-editor-message {
+  border-top: 2px solid #d7cbb8;
+  padding-top: 16px;
+  color: var(--color-muted);
+  font-weight: 700;
+  line-height: 1.5;
 }
 
 .editor-row {

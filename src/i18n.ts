@@ -4,13 +4,21 @@ const messages = {
   ja: {
     appTitle: "おもいでカード",
     appSubtitle: "絵文字と短い言葉のカードをめくり、会話のきっかけにします。",
+    onboardingTitle: "はじめての方へ",
+    onboardingGuide:
+      "まずはカードを1枚めくり、合いそうなら下の編集欄で家族の思い出に近い言葉へ変えてください。",
     cardStageTitle: "カード表示",
     cardKeyboardHint: "カード表示にフォーカスしているときは、左右の矢印キーでもカードをめくれます。",
+    emptyCardsTitle: "まだカードがありません",
+    emptyCardsMessage:
+      "最初のカードを追加すると、ここに大きく表示されます。絵文字と短い言葉だけで始められます。",
+    emptyCardsAction: "最初のカードを追加",
     previous: "前へ",
     next: "次へ",
     cardCount: "全{total}枚中 {current}枚目",
     editorTitle: "家族用カード編集",
     editorHelp: "思い出しやすい絵文字と短い言葉を入力してください。",
+    emptyEditorMessage: "カードはまだありません。下のボタンから最初のカードを追加してください。",
     emojiLabel: "絵文字",
     phraseLabel: "短い言葉",
     saveCard: "保存",
@@ -34,13 +42,21 @@ const messages = {
   en: {
     appTitle: "Memory Cards",
     appSubtitle: "Flip through cards with an emoji and a short phrase to prompt conversation.",
+    onboardingTitle: "First time here?",
+    onboardingGuide:
+      "Start by flipping one card, then use the editor below to replace it with a family memory if it fits.",
     cardStageTitle: "Card display",
     cardKeyboardHint: "When the card display is focused, use the Left and Right Arrow keys to move between cards.",
+    emptyCardsTitle: "No cards yet",
+    emptyCardsMessage:
+      "Add the first card and it will appear here in large type. An emoji and a short phrase are enough to begin.",
+    emptyCardsAction: "Add the first card",
     previous: "Previous",
     next: "Next",
     cardCount: "Card {current} of {total}",
     editorTitle: "Family card editor",
     editorHelp: "Add an easy-to-recognize emoji and a short phrase.",
+    emptyEditorMessage: "There are no cards yet. Use the button below to add the first one.",
     emojiLabel: "Emoji",
     phraseLabel: "Short phrase",
     saveCard: "Save",
