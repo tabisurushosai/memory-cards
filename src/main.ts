@@ -121,13 +121,19 @@ function renderEmptyCardsPanel(): HTMLElement {
   const section = element("section", "card-stage empty-cards");
   section.id = "card-stage";
   section.setAttribute("aria-labelledby", "empty-cards-title");
+  section.setAttribute("aria-describedby", "empty-cards-message empty-cards-next-step");
 
   const title = element("h2");
   title.id = "empty-cards-title";
   title.textContent = t("emptyCardsTitle");
 
   const message = element("p", "help-text");
+  message.id = "empty-cards-message";
   message.textContent = t("emptyCardsMessage");
+
+  const nextStep = element("p", "empty-cards-next-step");
+  nextStep.id = "empty-cards-next-step";
+  nextStep.textContent = t("emptyCardsNextStep");
 
   const add = button(t("emptyCardsAction"), "primary wide");
   add.addEventListener("click", () => {
@@ -135,7 +141,7 @@ function renderEmptyCardsPanel(): HTMLElement {
     void saveAndRender(t("saved"), "card-stage");
   });
 
-  section.append(title, message, add);
+  section.append(title, message, nextStep, add);
   return section;
 }
 

@@ -6,12 +6,13 @@ const messages = {
     appSubtitle: "絵文字と短い言葉のカードをめくって、会話のきっかけを作ります。",
     onboardingTitle: "はじめての方へ",
     onboardingGuide:
-      "まずはカードを1枚めくります。しっくりこないときは、下の編集欄で家族の思い出に近い言葉へ変えてください。",
+      "まずは表示中のカードを一緒に読み、必要なら下の編集欄で家族の思い出に近い言葉へ直して保存してください。",
     cardStageTitle: "カード表示",
     cardKeyboardHint: "カード表示にフォーカスしているときは、左右の矢印キーでも前後のカードへ移動できます。",
-    emptyCardsTitle: "まだカードがありません",
+    emptyCardsTitle: "最初のカードを作りましょう",
     emptyCardsMessage:
-      "最初のカードを追加すると、ここに大きく表示されます。絵文字と短い言葉だけで始められます。",
+      "カードがない間も、下のボタンからすぐに1枚目を用意できます。絵文字1つと短い言葉だけで大丈夫です。",
+    emptyCardsNextStep: "追加すると、この場所に大きなカードとして表示されます。",
     emptyCardsAction: "最初のカードを追加",
     previous: "前へ",
     next: "次へ",
@@ -46,12 +47,13 @@ const messages = {
     appSubtitle: "Flip cards with an emoji and a short phrase to start a conversation.",
     onboardingTitle: "First time here?",
     onboardingGuide:
-      "Start by flipping one card. If it does not fit, use the editor below to make the phrase closer to a family memory.",
+      "Start by reading the card together, then use the editor below to save a phrase that fits your family memory.",
     cardStageTitle: "Card display",
     cardKeyboardHint: "When the card display is focused, use the Left and Right Arrow keys to move to the previous or next card.",
-    emptyCardsTitle: "No cards yet",
+    emptyCardsTitle: "Create your first card",
     emptyCardsMessage:
-      "After you add the first card, it will appear here in large type. An emoji and a short phrase are enough to begin.",
+      "If there are no cards, the button below can prepare the first one right away. One emoji and a short phrase are enough.",
+    emptyCardsNextStep: "After you add it, the card appears here in large type.",
     emptyCardsAction: "Add the first card",
     previous: "Previous",
     next: "Next",
