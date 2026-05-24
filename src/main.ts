@@ -118,12 +118,14 @@ function renderHeader(): HTMLElement {
 function renderFirstRunGuide(): HTMLElement {
   const guide = element("aside", "onboarding-guide");
   guide.setAttribute("aria-labelledby", "onboarding-title");
+  guide.setAttribute("aria-describedby", "onboarding-message");
 
   const title = element("h2", "guide-title");
   title.id = "onboarding-title";
   title.textContent = t("onboardingTitle");
 
   const message = element("p");
+  message.id = "onboarding-message";
   message.textContent = t("onboardingGuide");
 
   guide.append(title, message);
