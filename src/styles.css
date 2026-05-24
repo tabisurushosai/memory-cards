@@ -4,10 +4,10 @@
   --color-surface-strong: #ffffff;
   --color-surface-muted: #fbf6ed;
   --color-text: #111827;
-  --color-muted: #374151;
+  --color-muted: #334155;
   --color-muted-bg: #e7ddcf;
   --color-border: #1f2937;
-  --color-border-soft: #c7b79f;
+  --color-border-soft: #b8a890;
   --color-card: #102033;
   --color-card-soft: #17314d;
   --color-accent: #f6c453;
@@ -16,6 +16,8 @@
   --color-focus: #005fcc;
   --color-success: #064e2c;
   --color-success-bg: #e4f4eb;
+  --color-warning: #7c2d12;
+  --color-warning-bg: #fff1d6;
   --shadow-solid: 0 5px 0 var(--color-border);
   --shadow-soft: 0 10px 24px rgba(31, 41, 55, 0.08);
   color: var(--color-text);
@@ -57,6 +59,7 @@ input {
 .shell {
   display: grid;
   gap: clamp(20px, 4.5vw, 26px);
+  min-height: 100dvh;
   padding: clamp(20px, 5vw, 30px);
 }
 
@@ -68,7 +71,7 @@ input {
 .header {
   display: grid;
   gap: 10px;
-  padding: 2px 2px 0;
+  padding: 4px 2px 0;
 }
 
 h1,
@@ -100,7 +103,7 @@ h2 {
 
 .panel-copy,
 .state-copy {
-  max-width: 34ch;
+  max-width: 36ch;
 }
 
 .subtitle,
@@ -162,7 +165,7 @@ h2 {
 
 .card-stage {
   display: grid;
-  gap: clamp(20px, 4vw, 24px);
+  gap: clamp(18px, 4vw, 24px);
   padding: clamp(22px, 5vw, 28px);
 }
 
@@ -178,30 +181,35 @@ h2 {
 
 .memory-card {
   display: grid;
-  min-height: clamp(200px, 55vw, 240px);
+  min-height: clamp(210px, 55vw, 250px);
   align-content: center;
-  gap: 20px;
+  gap: clamp(18px, 5vw, 24px);
   border-radius: 18px;
   padding: clamp(30px, 7vw, 38px) clamp(22px, 6vw, 30px);
   background:
     radial-gradient(circle at top, rgba(246, 196, 83, 0.22), transparent 34%),
     linear-gradient(180deg, var(--color-card-soft), var(--color-card));
   color: #ffffff;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+    inset 0 -18px 36px rgba(0, 0, 0, 0.12);
   text-align: center;
 }
 
 .memory-emoji {
   font-size: clamp(4rem, 18vw, 5.5rem);
   line-height: 1;
+  filter: drop-shadow(0 2px 1px rgba(0, 0, 0, 0.24));
 }
 
 .memory-phrase {
-  max-width: 13em;
+  max-width: 14em;
   margin: 0 auto;
+  color: #fffdf7;
   font-size: clamp(1.45rem, 7vw, 1.8rem);
   font-weight: 800;
   line-height: 1.28;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
   text-wrap: balance;
 }
 
@@ -214,10 +222,10 @@ h2 {
 
 .card-count {
   min-width: 76px;
-  border: 1px solid var(--color-border-soft);
+  border: 2px solid var(--color-border-soft);
   border-radius: 999px;
   padding: 10px 15px;
-  background: #fff4cf;
+  background: #fff7d9;
   font-size: 1rem;
   font-weight: 700;
   line-height: 1.2;
@@ -239,6 +247,7 @@ h2 {
   align-content: center;
   gap: 16px;
   min-height: 250px;
+  padding-block: clamp(28px, 7vw, 40px);
   border-style: dashed;
   border-color: #4b5563;
   background:
@@ -303,6 +312,7 @@ h2 {
   border-radius: 16px;
   padding: 13px;
   background: var(--color-surface-muted);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
 }
 
 .field {
@@ -439,19 +449,30 @@ input:focus-visible,
 }
 
 .status-banner {
+  --status-bg: var(--color-success-bg);
+  --status-border: rgba(6, 78, 44, 0.34);
+  --status-color: var(--color-success);
+  --status-shadow: rgba(6, 78, 44, 0.22);
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  border: 2px solid rgba(6, 78, 44, 0.34);
+  border: 2px solid var(--status-border);
   border-radius: 16px;
   padding: 14px 16px;
-  background: var(--color-success-bg);
-  color: var(--color-success);
+  background: var(--status-bg);
+  color: var(--status-color);
   font-weight: 800;
   line-height: 1.4;
   box-shadow:
-    0 3px 0 rgba(6, 78, 44, 0.22),
+    0 3px 0 var(--status-shadow),
     var(--shadow-soft);
+}
+
+.status-banner.warning {
+  --status-bg: var(--color-warning-bg);
+  --status-border: rgba(124, 45, 18, 0.42);
+  --status-color: var(--color-warning);
+  --status-shadow: rgba(124, 45, 18, 0.2);
 }
 
 .status-banner::before {
@@ -469,6 +490,8 @@ input:focus-visible,
   min-height: 280px;
   align-content: center;
   padding-block: 40px;
+  background:
+    linear-gradient(180deg, rgba(255, 253, 247, 0.94), var(--color-surface));
   text-align: center;
 }
 

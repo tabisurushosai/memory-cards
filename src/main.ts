@@ -36,6 +36,7 @@ if (!appRoot) {
 const app = appRoot;
 let state: AppState;
 let showFirstRunGuide = false;
+type StatusTone = "success" | "warning";
 type FocusTarget =
   | CardNavigationFocusTarget
   | `save-card-${number}`;
@@ -83,7 +84,7 @@ function renderLoading(): void {
   app.append(container);
 }
 
-function render(statusMessage = "", focusTarget?: FocusTarget): void {
+function render(statusMessage = "", focusTarget?: FocusTarget, statusTone: StatusTone = "success"): void {
   app.textContent = "";
 
   const currentCard = state.cards[state.currentIndex];
@@ -91,7 +92,7 @@ function render(statusMessage = "", focusTarget?: FocusTarget): void {
   const content = [
     renderHeader(),
     ...(showFirstRunGuide ? [renderFirstRunGuide()] : []),
-    ...(statusMessage ? [renderStatusBanner(statusMessage)] : []),
+    ...(statusMessage ? [renderStatusBanner(statusMessage, statusTone)] : []),
     currentCard ? renderCardStage(currentCard) : renderEmptyCardsPanel(),
     renderEditor(),
     renderPremiumPanel(),
@@ -135,8 +136,8 @@ function renderFirstRunGuide(): HTMLElement {
   return guide;
 }
 
-function renderStatusBanner(statusMessage: string): HTMLElement {
-  const banner = element("aside", "status-banner");
+function renderStatusBanner(statusMessage: string, tone: StatusTone): HTMLElement {
+  const banner = element("aside", `status-banner ${tone}`);
   banner.setAttribute("role", "status");
   banner.setAttribute("aria-live", "polite");
   banner.setAttribute("aria-atomic", "true");
@@ -346,7 +347,7 @@ function renderCardEditor(card: MemoryCard, index: number): HTMLElement {
 
   remove.addEventListener("click", () => {
     if (state.cards.length <= 1) {
-      render(t("cannotDeleteLast"));
+      render(t("cannotDeleteLast"), undefined, "warning");
       return;
     }
 
