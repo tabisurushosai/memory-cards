@@ -1,11 +1,11 @@
-import type { AppState } from "../core/appState";
+import type { AppState, AppStateSnapshot } from "../core/appState";
 import type { StorageAdapter } from "./StorageAdapter";
 
 export type { StorageAdapter } from "./StorageAdapter";
 
 export const APP_STORAGE_KEY = "memoryCardsState";
 
-export type StoredAppState = Readonly<Partial<AppState>>;
+export type StoredAppState = AppStateSnapshot;
 
 export interface AppStorage {
   load(): Promise<StoredAppState | undefined>;

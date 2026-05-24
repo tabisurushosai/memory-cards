@@ -37,10 +37,9 @@ const app = appRoot;
 let state: AppState;
 let showFirstRunGuide = false;
 type FocusTarget =
-  | "card-stage"
-  | "previous-card"
-  | "next-card"
+  | CardNavigationFocusTarget
   | `save-card-${number}`;
+type CardNavigationFocusTarget = "card-stage" | "previous-card" | "next-card";
 
 async function boot(): Promise<void> {
   document.documentElement.lang = locale;
@@ -200,8 +199,7 @@ function renderCardStage(card: MemoryCard): HTMLElement {
   previous.setAttribute("aria-label", t("previousCardAriaLabel"));
   previous.setAttribute("aria-controls", "current-card");
   previous.addEventListener("click", () => {
-    state.currentIndex = getPreviousIndex(state.currentIndex, state.cards.length);
-    void saveAndRender("", "previous-card");
+    navigateToPreviousCard("previous-card");
   });
 
   const count = element("span", "card-count");
@@ -218,8 +216,7 @@ function renderCardStage(card: MemoryCard): HTMLElement {
   next.setAttribute("aria-label", t("nextCardAriaLabel"));
   next.setAttribute("aria-controls", "current-card");
   next.addEventListener("click", () => {
-    state.currentIndex = getNextIndex(state.currentIndex, state.cards.length);
-    void saveAndRender("", "next-card");
+    navigateToNextCard("next-card");
   });
 
   const keyboardHint = element("p", "keyboard-hint");
@@ -238,15 +235,23 @@ function handleCardStageKeydown(event: KeyboardEvent): void {
 
   if (event.key === "ArrowLeft") {
     event.preventDefault();
-    state.currentIndex = getPreviousIndex(state.currentIndex, state.cards.length);
-    void saveAndRender("", "card-stage");
+    navigateToPreviousCard("card-stage");
   }
 
   if (event.key === "ArrowRight") {
     event.preventDefault();
-    state.currentIndex = getNextIndex(state.currentIndex, state.cards.length);
-    void saveAndRender("", "card-stage");
+    navigateToNextCard("card-stage");
   }
+}
+
+function navigateToPreviousCard(focusTarget: CardNavigationFocusTarget): void {
+  state.currentIndex = getPreviousIndex(state.currentIndex, state.cards.length);
+  void saveAndRender("", focusTarget);
+}
+
+function navigateToNextCard(focusTarget: CardNavigationFocusTarget): void {
+  state.currentIndex = getNextIndex(state.currentIndex, state.cards.length);
+  void saveAndRender("", focusTarget);
 }
 
 function renderEditor(): HTMLElement {
