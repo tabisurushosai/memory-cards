@@ -11,7 +11,8 @@ const messages = {
     onboardingGuide:
       "合わない言葉は下の編集欄で直して保存できます。迷ったら、写真や季節など身近な話題から始めてください。",
     cardStageTitle: "カード表示",
-    cardKeyboardHint: "カード表示にフォーカスがあるときは、左右の矢印キーでも前後のカードに移動できます。",
+    cardKeyboardHint:
+      "カード表示や移動ボタンにフォーカスがあるときは、左右の矢印キーでも前後のカードに移動できます。",
     emptyCardsTitle: "カードがまだありません",
     emptyCardsLead: "追加したカードは、ここに大きく表示されます。",
     emptyCardsMessage:
@@ -21,8 +22,8 @@ const messages = {
     previous: "前へ",
     next: "次へ",
     cardNavigationAriaLabel: "カードの移動操作",
-    previousCardAriaLabel: "前のカードを表示",
-    nextCardAriaLabel: "次のカードを表示",
+    previousCardAriaLabel: "前へ: 前のカードを表示",
+    nextCardAriaLabel: "次へ: 次のカードを表示",
     cardCount: "{total}枚中{current}枚目",
     editorTitle: "家族向けカード編集",
     editorHelp: "思い出を話しやすい絵文字と短い言葉を入力してください。",
@@ -62,7 +63,8 @@ const messages = {
     onboardingGuide:
       "If a phrase does not fit, update it in the editor below and save it. Photos, seasons, and familiar places are easy places to begin.",
     cardStageTitle: "Card display",
-    cardKeyboardHint: "When the card display is focused, use the Left and Right Arrow keys to move between cards.",
+    cardKeyboardHint:
+      "When the card display or navigation buttons are focused, use the Left and Right Arrow keys to move between cards.",
     emptyCardsTitle: "No cards yet",
     emptyCardsLead: "Cards you add will appear here in large type.",
     emptyCardsMessage:
@@ -72,8 +74,8 @@ const messages = {
     previous: "Previous",
     next: "Next",
     cardNavigationAriaLabel: "Card navigation controls",
-    previousCardAriaLabel: "Show previous card",
-    nextCardAriaLabel: "Show next card",
+    previousCardAriaLabel: "Previous: show previous card",
+    nextCardAriaLabel: "Next: show next card",
     cardCount: "Card {current} of {total}",
     editorTitle: "Edit family cards",
     editorHelp: "Enter an easy-to-recognize emoji and a short phrase that is easy to talk about.",
