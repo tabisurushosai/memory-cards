@@ -136,10 +136,7 @@ function renderEmptyCardsPanel(): HTMLElement {
   nextStep.textContent = t("emptyCardsNextStep");
 
   const add = button(t("emptyCardsAction"), "primary wide");
-  add.addEventListener("click", () => {
-    addNewCard();
-    void saveAndRender(t("saved"), "card-stage");
-  });
+  add.addEventListener("click", handleAddCard);
 
   section.append(title, message, nextStep, add);
   return section;
@@ -248,10 +245,7 @@ function renderEditor(): HTMLElement {
   }
 
   const add = button(t("addCard"), "primary wide");
-  add.addEventListener("click", () => {
-    addNewCard();
-    void saveAndRender(t("saved"), "card-stage");
-  });
+  add.addEventListener("click", handleAddCard);
 
   section.append(title, help, list, add);
   return section;
@@ -332,13 +326,13 @@ function renderPremiumPanel(): HTMLElement {
 
   const status = calculatePremiumStatus(state.firstStartedAt, state.premiumPurchased);
   const statusLine = element("p", "premium-status");
-  if (state.premiumPurchased) {
-    statusLine.textContent = t("premiumPurchased");
-  } else if (status.isTrialActive) {
-    statusLine.textContent = t("premiumActiveTrial", {
-      days: formatRemainingDays(locale, status.trialDaysRemaining),
-      endsAt: formatDate(locale, status.trialEndsAt)
-    });
+  if (status.isPremiumActive) {
+    statusLine.textContent = state.premiumPurchased
+      ? t("premiumPurchased")
+      : t("premiumActiveTrial", {
+          days: formatRemainingDays(locale, status.trialDaysRemaining),
+          endsAt: formatDate(locale, status.trialEndsAt)
+        });
   } else {
     statusLine.textContent = t("premiumExpired");
   }
@@ -375,6 +369,11 @@ function addNewCard(): void {
     })
   ];
   state.currentIndex = state.cards.length - 1;
+}
+
+function handleAddCard(): void {
+  addNewCard();
+  void saveAndRender(t("saved"), "card-stage");
 }
 
 function restoreFocus(focusTarget?: FocusTarget): void {

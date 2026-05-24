@@ -1,13 +1,13 @@
 export interface MemoryCard {
-  id: string;
-  emoji: string;
-  phrase: string;
-  updatedAt: string;
+  readonly id: string;
+  readonly emoji: string;
+  readonly phrase: string;
+  readonly updatedAt: string;
 }
 
 export interface DraftMemoryCard {
-  emoji: string;
-  phrase: string;
+  readonly emoji: string;
+  readonly phrase: string;
 }
 
 export const DEFAULT_CARDS: MemoryCard[] = [
@@ -41,7 +41,7 @@ export function updateMemoryCard(
   };
 }
 
-export function normalizeCards(cards: MemoryCard[]): MemoryCard[] {
+export function normalizeCards(cards: readonly MemoryCard[]): MemoryCard[] {
   const normalized = cards
     .map((card) => ({
       ...card,
