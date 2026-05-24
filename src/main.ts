@@ -213,6 +213,7 @@ function renderCardStage(card: MemoryCard): HTMLElement {
   previous.dataset["focusKey"] = "previous-card";
   previous.setAttribute("aria-label", t("previousCardAriaLabel"));
   previous.setAttribute("aria-controls", "current-card");
+  previous.setAttribute("aria-keyshortcuts", "ArrowLeft");
   previous.addEventListener("click", () => {
     navigateToPreviousCard("previous-card");
   });
@@ -230,6 +231,7 @@ function renderCardStage(card: MemoryCard): HTMLElement {
   next.dataset["focusKey"] = "next-card";
   next.setAttribute("aria-label", t("nextCardAriaLabel"));
   next.setAttribute("aria-controls", "current-card");
+  next.setAttribute("aria-keyshortcuts", "ArrowRight");
   next.addEventListener("click", () => {
     navigateToNextCard("next-card");
   });
@@ -244,19 +246,30 @@ function renderCardStage(card: MemoryCard): HTMLElement {
 }
 
 function handleCardStageKeydown(event: KeyboardEvent): void {
-  if (event.target !== event.currentTarget || event.altKey || event.ctrlKey || event.metaKey) {
+  if (event.altKey || event.ctrlKey || event.metaKey) {
     return;
   }
 
   if (event.key === "ArrowLeft") {
     event.preventDefault();
-    navigateToPreviousCard("card-stage");
+    navigateToPreviousCard(getCardNavigationFocusTarget(event.target));
   }
 
   if (event.key === "ArrowRight") {
     event.preventDefault();
-    navigateToNextCard("card-stage");
+    navigateToNextCard(getCardNavigationFocusTarget(event.target));
   }
+}
+
+function getCardNavigationFocusTarget(target: EventTarget | null): CardNavigationFocusTarget {
+  if (target instanceof HTMLElement) {
+    const focusKey = target.dataset["focusKey"];
+    if (focusKey === "previous-card" || focusKey === "next-card") {
+      return focusKey;
+    }
+  }
+
+  return "card-stage";
 }
 
 function navigateToPreviousCard(focusTarget: CardNavigationFocusTarget): void {
