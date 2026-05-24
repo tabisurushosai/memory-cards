@@ -1,8 +1,6 @@
 import type { AppState, AppStateSnapshot } from "../core/appState";
 import type { StorageAdapter } from "./StorageAdapter";
 
-export type { StorageAdapter } from "./StorageAdapter";
-
 export const APP_STORAGE_KEY = "memoryCardsState";
 
 export type StoredAppState = AppStateSnapshot;
@@ -20,7 +18,8 @@ export class AdapterAppStorage implements AppStorage {
   constructor(private readonly adapter: StorageAdapter) {}
 
   async load(): Promise<StoredAppState | undefined> {
-    return this.adapter.get<StoredAppState>(APP_STORAGE_KEY);
+    const value = await this.adapter.get(APP_STORAGE_KEY);
+    return value as StoredAppState | undefined;
   }
 
   async save(state: Readonly<AppState>): Promise<void> {

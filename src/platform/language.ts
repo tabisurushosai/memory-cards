@@ -1,3 +1,5 @@
+import { getChromeGlobal } from "./chromeGlobal";
+
 interface ChromeI18nGlobal {
   i18n?: {
     getUILanguage?: () => string;
@@ -9,7 +11,7 @@ export function getPreferredLanguage(): string {
 }
 
 function getChromeLanguage(): string | undefined {
-  const chromeGlobal = (globalThis as typeof globalThis & { chrome?: ChromeI18nGlobal }).chrome;
+  const chromeGlobal = getChromeGlobal<ChromeI18nGlobal>();
   return chromeGlobal?.i18n?.getUILanguage?.();
 }
 
