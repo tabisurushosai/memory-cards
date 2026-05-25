@@ -8,6 +8,7 @@ const messages = {
     appSubtitle: "絵文字と短い言葉のカードをめくり、会話のきっかけを作ります。",
     onboardingTitle: "初めての方へ",
     onboardingLead: "まずはカードを1枚一緒に読み、思い出したことを短い言葉にしましょう。",
+    onboardingPrompt: "声かけ例: 「このカードを見て、どんなことを思い出しますか？」",
     onboardingGuide:
       "しっくりこない言葉は、下の編集欄で直して保存できます。迷ったら、写真や季節など身近な話題から始めてください。",
     cardStageTitle: "カード表示",
@@ -17,6 +18,7 @@ const messages = {
     emptyCardsLead: "追加したカードは、ここに大きく表示されます。",
     emptyCardsMessage:
       "会話のきっかけは、絵文字1つと短い言葉だけで始められます。",
+    emptyCardsTip: "例: 📷 と「写真を見た日のこと」のように、答えやすい一言から始めます。",
     emptyCardsNextStep: "下のボタンで最初のカードを作り、表示されたら編集欄で内容を整えてください。",
     emptyCardsAction: "最初のカードを追加",
     previous: "前へ",
@@ -60,6 +62,7 @@ const messages = {
     appSubtitle: "Flip through cards with an emoji and a short phrase to start a conversation.",
     onboardingTitle: "First time here?",
     onboardingLead: "Start by reading one card together, then turn the memory into a short phrase.",
+    onboardingPrompt: 'Try asking: "What does this card remind you of?"',
     onboardingGuide:
       "If a phrase does not fit, update it in the editor below and save it. Photos, seasons, and familiar places are easy places to start.",
     cardStageTitle: "Card display",
@@ -69,6 +72,7 @@ const messages = {
     emptyCardsLead: "Cards you add will appear here in large type.",
     emptyCardsMessage:
       "A conversation prompt only needs one emoji and one short phrase.",
+    emptyCardsTip: 'Example: pair 📷 with "The day we looked at photos" to start with an easy answer.',
     emptyCardsNextStep: "Use the button below to create the first card, then adjust it in the editor after it appears.",
     emptyCardsAction: "Add first card",
     previous: "Previous",
