@@ -35,6 +35,7 @@ if (!appRoot) {
 }
 
 const app = appRoot;
+app.setAttribute("aria-labelledby", "app-title");
 let state: AppState;
 let showFirstRunGuide = false;
 type StatusTone = "success" | "warning";
@@ -75,6 +76,7 @@ function renderLoading(): void {
   panel.setAttribute("aria-describedby", "loading-message");
 
   const title = element("h1", "state-title");
+  title.id = "app-title";
   title.textContent = t("appTitle");
   const message = element("p", "state-message");
   message.id = "loading-message";
@@ -109,6 +111,7 @@ function render(statusMessage = "", focusTarget?: FocusTarget, statusTone: Statu
 function renderHeader(): HTMLElement {
   const header = element("header", "header");
   const title = element("h1", "app-title");
+  title.id = "app-title";
   title.textContent = t("appTitle");
   const subtitle = element("p", "subtitle");
   subtitle.textContent = t("appSubtitle");
@@ -302,13 +305,15 @@ function renderEditor(): HTMLElement {
   const help = element("p", "help-text panel-copy");
   help.id = "editor-help";
   help.textContent = t("editorHelp");
-  const list = element("div", "editor-list");
+  const list = element(state.cards.length === 0 ? "div" : "ul", "editor-list");
 
   if (state.cards.length === 0) {
     list.append(renderEditorEmptyState());
   } else {
     state.cards.forEach((card, index) => {
-      list.append(renderCardEditor(card, index));
+      const item = element("li", "editor-list-item");
+      item.append(renderCardEditor(card, index));
+      list.append(item);
     });
   }
 
