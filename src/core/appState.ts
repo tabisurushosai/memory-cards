@@ -16,7 +16,7 @@ export interface AppStateSnapshot {
 
 export function createInitialState(now: Date = new Date()): AppState {
   return {
-    cards: DEFAULT_CARDS,
+    cards: [...DEFAULT_CARDS],
     currentIndex: 0,
     firstStartedAt: now.toISOString(),
     premiumPurchased: false
