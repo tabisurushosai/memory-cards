@@ -118,7 +118,7 @@ function renderHeader(): HTMLElement {
 function renderFirstRunGuide(): HTMLElement {
   const guide = element("aside", "onboarding-guide");
   guide.setAttribute("aria-labelledby", "onboarding-title");
-  guide.setAttribute("aria-describedby", "onboarding-lead onboarding-message");
+  guide.setAttribute("aria-describedby", "onboarding-lead onboarding-prompt onboarding-message");
 
   const title = element("h2", "guide-title");
   title.id = "onboarding-title";
@@ -128,11 +128,15 @@ function renderFirstRunGuide(): HTMLElement {
   lead.id = "onboarding-lead";
   lead.textContent = t("onboardingLead");
 
+  const prompt = element("p", "guide-prompt");
+  prompt.id = "onboarding-prompt";
+  prompt.textContent = t("onboardingPrompt");
+
   const message = element("p", "guide-copy");
   message.id = "onboarding-message";
   message.textContent = t("onboardingGuide");
 
-  guide.append(title, lead, message);
+  guide.append(title, lead, prompt, message);
   return guide;
 }
 
@@ -151,7 +155,7 @@ function renderEmptyCardsPanel(): HTMLElement {
   section.setAttribute("aria-labelledby", "empty-cards-title");
   section.setAttribute(
     "aria-describedby",
-    "empty-cards-lead empty-cards-message empty-cards-next-step"
+    "empty-cards-lead empty-cards-message empty-cards-tip empty-cards-next-step"
   );
 
   const title = element("h2", "state-title");
@@ -166,6 +170,10 @@ function renderEmptyCardsPanel(): HTMLElement {
   message.id = "empty-cards-message";
   message.textContent = t("emptyCardsMessage");
 
+  const tip = element("p", "empty-cards-tip state-copy");
+  tip.id = "empty-cards-tip";
+  tip.textContent = t("emptyCardsTip");
+
   const nextStep = element("p", "empty-cards-next-step state-copy");
   nextStep.id = "empty-cards-next-step";
   nextStep.textContent = t("emptyCardsNextStep");
@@ -173,7 +181,7 @@ function renderEmptyCardsPanel(): HTMLElement {
   const add = button(t("emptyCardsAction"), "primary wide");
   add.addEventListener("click", handleAddCard);
 
-  section.append(title, lead, message, nextStep, add);
+  section.append(title, lead, message, tip, nextStep, add);
   return section;
 }
 
