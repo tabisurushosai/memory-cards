@@ -111,7 +111,7 @@ const messages = {
     privacyNote: "Your cards are saved in this browser's local storage and are never sent to an external service.",
     nonMedicalNote: "This extension is for conversation prompts only. It does not provide diagnosis, treatment, or medical advice."
   }
-} as const;
+} as const satisfies Record<Locale, Record<string, string>>;
 
 const defaultCardDrafts = {
   ja: DEFAULT_CARD_DRAFTS,
@@ -122,7 +122,8 @@ const defaultCardDrafts = {
   ]
 } satisfies Record<Locale, readonly DraftMemoryCard[]>;
 
-export type MessageKey = keyof typeof messages.ja;
+type MessageCatalog = (typeof messages)[Locale];
+export type MessageKey = keyof MessageCatalog;
 export type Translator = (key: MessageKey, replacements?: Record<string, string | number>) => string;
 
 const localeTags: Record<Locale, string> = {

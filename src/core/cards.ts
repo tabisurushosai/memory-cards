@@ -10,13 +10,16 @@ export interface DraftMemoryCard {
   readonly phrase: string;
 }
 
+const MAX_EMOJI_CODE_POINTS = 2;
+export const MAX_PHRASE_LENGTH = 48;
+
 export const DEFAULT_CARD_DRAFTS = [
   { emoji: "🌸", phrase: "春に見た花のこと" },
   { emoji: "🍙", phrase: "好きだったお弁当" },
   { emoji: "🚃", phrase: "よく出かけた場所" }
 ] as const satisfies readonly DraftMemoryCard[];
 
-export const DEFAULT_CARDS: MemoryCard[] = DEFAULT_CARD_DRAFTS.map((draft) => createMemoryCard(draft));
+export const DEFAULT_CARDS: readonly MemoryCard[] = DEFAULT_CARD_DRAFTS.map((draft) => createMemoryCard(draft));
 
 export function createMemoryCard(
   draft: DraftMemoryCard,
@@ -52,7 +55,7 @@ export function normalizeCards(cards: readonly MemoryCard[]): MemoryCard[] {
     }))
     .filter((card) => card.phrase.length > 0);
 
-  return normalized.length > 0 ? normalized : DEFAULT_CARDS;
+  return normalized.length > 0 ? normalized : [...DEFAULT_CARDS];
 }
 
 export function getNextIndex(currentIndex: number, cardCount: number): number {
@@ -81,10 +84,10 @@ export function clampCardIndex(index: number, cardCount: number): number {
 
 function normalizeEmoji(value: string): string {
   const trimmed = value.trim();
-  return trimmed.length > 0 ? Array.from(trimmed).slice(0, 2).join("") : "💬";
+  return trimmed.length > 0 ? Array.from(trimmed).slice(0, MAX_EMOJI_CODE_POINTS).join("") : "💬";
 }
 
 function normalizePhrase(value: string): string {
-  const phrase = value.trim().replace(/\s+/g, " ").slice(0, 48);
+  const phrase = value.trim().replace(/\s+/g, " ").slice(0, MAX_PHRASE_LENGTH);
   return phrase.length > 0 ? phrase : "思い出のこと";
 }

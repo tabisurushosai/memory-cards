@@ -1,5 +1,6 @@
 import "./styles.css";
 import {
+  MAX_PHRASE_LENGTH,
   createMemoryCard,
   getNextIndex,
   getPreviousIndex,
@@ -338,7 +339,7 @@ function renderCardEditor(card: MemoryCard, index: number): HTMLElement {
   emojiInput.classList.add("emoji-input");
   emojiInput.setAttribute("aria-label", t("emojiInputAriaLabel", { index: displayIndex }));
 
-  const phraseInput = input(`card-${index}-phrase`, card.phrase, 48);
+  const phraseInput = input(`card-${index}-phrase`, card.phrase, MAX_PHRASE_LENGTH);
   phraseInput.setAttribute("aria-label", t("phraseInputAriaLabel", { index: displayIndex }));
 
   const save = button(t("saveCard"), "primary", "submit");
